@@ -2,8 +2,12 @@ import javax.swing.*;
 
 class MiPanel extends PanelBase {
 
-    public MiPanel(String nom) {
-        super(nom);
+    public MiPanel(String name) {
+        super(name);
+
+        //Para todas las ventanas
+        Rewards panelRecompensas = new Rewards();
+        panelPrincipal.add(panelRecompensas, "Rewards");
     }
 }
 
