@@ -1,21 +1,31 @@
+
 import java.awt.*;
 import javax.swing.*;
 
 //Clase abstracta que solo puede crear hijos que seran las ventanas separadas
 abstract class PanelBase extends JPanel {
 
-    //Variables para la ventana
+    //Constantes para la ventana
     private final int ANCHO_PANTALLA = 1920;
     private final int ALTO_PANTALLA = 1080;
 
-    //Variables para abrir y cerrar la barra lateral
+    //Constantes para abrir y cerrar la barra lateral
     private boolean extendido = false;
     private final int ANCHO_CERRADO = 50;
     private final int ANCHO_ABIERTO = 200;
     //private Timer timerAnimacion; por el momento
 
+    //Constantes para los colores a usar
+    private static final Color COLOR_VERDE_PRIMARIO = new Color(76, 175, 80);
+    private static final Color COLOR_GRIS_PRIMARIO = new Color(230, 230, 230);
+
+    //Variables para los botones
+    Dimension BUTTON_HOME_SIZE = new Dimension(50, 50);
+    Dimension NORMAL_BUTTON_SIZE = new Dimension(230, 50);
+    Dimension RIGIDAREA_SIZE = new Dimension(0, 15);
+
     //Nombres de los botones de la barra lateral
-    String[] nombreBotones = {"", "Inicio", "Estadisticas", "Recompensas", "Cuenta", "Configuracion", "About Us"};
+    String[] nombreBotones = {"", "Inicio", "Estadisticas", "Recompensas", "Mapa", "Cuenta", "Configuracion", "About Us"};
 
     //Atributos que solo los hijos pueden usar
     protected JLabel titulo; //titulo de la pantalla
@@ -35,7 +45,7 @@ abstract class PanelBase extends JPanel {
 
         //Configura el panel superior del titulo y perfil
         panelSuperior = new JPanel();
-        panelSuperior.setBackground(new Color(230, 230, 230));
+        panelSuperior.setBackground(COLOR_GRIS_PRIMARIO);
         panelSuperior.setLayout(new BorderLayout());
         this.add(panelSuperior, BorderLayout.NORTH);
 
@@ -57,8 +67,9 @@ abstract class PanelBase extends JPanel {
 
         //Configura le panel lateral con las opciones
         panelLateral = new JPanel();
-        panelLateral.setLayout(new GridLayout(10, 1, 0, 5));
-        panelLateral.setBackground(new Color(200, 200, 200));
+        //panelLateral.setLayout(new GridLayout(10, 1, 0, 5));
+        panelLateral.setLayout(new BoxLayout(panelLateral, BoxLayout.Y_AXIS));
+        panelLateral.setBackground(COLOR_GRIS_PRIMARIO);
         panelLateral.setPreferredSize(new Dimension(ANCHO_CERRADO, 0));
         this.add(panelLateral, BorderLayout.WEST);
 
@@ -74,6 +85,8 @@ abstract class PanelBase extends JPanel {
                 boton.setOpaque(false);
                 boton.setContentAreaFilled(false);
                 boton.setBorderPainted(true);
+                boton.setMinimumSize(BUTTON_HOME_SIZE);
+                boton.setMaximumSize(BUTTON_HOME_SIZE);
 
                 //Le agrega la imagen ☰ al boton
                 ImageIcon icon = new ImageIcon(getClass().getResource("Imagenes/BOTONES/Boton_Home.png")); //Falta que primero lo busque y casi de que no eista
@@ -86,34 +99,47 @@ abstract class PanelBase extends JPanel {
                 });
             } else {
                 //Configura el resto de botones laterales
-                boton.setBackground(new Color(46, 125, 50));
+                boton.setBackground(COLOR_VERDE_PRIMARIO);
                 boton.setForeground(Color.WHITE);
 
-                if(extendido == false){
+                //Tamaño de los botones
+                boton.setMinimumSize(NORMAL_BUTTON_SIZE);
+                boton.setMaximumSize(NORMAL_BUTTON_SIZE);
+
+
+                if (extendido == false) {
                     boton.setVisible(false); //Para que no se vea por defecto hasta que se extienda el panel
                 }
             }
-            //Agrega los botoners al panel lateral
+            //Agrega los botones al panel
             panelLateral.add(boton);
+
+            //Agrega espacios entre los botones
+            if (i < nombreBotones.length - 1) {
+            Component space = Box.createRigidArea(RIGIDAREA_SIZE);
+            space.setVisible(extendido); // Se oculta o muestra según el estado inicial
+            panelLateral.add(space);
+        }
         }
     }
 
     //Metodo que cambia entre el panel cerrado y abierto 
-    private void alternalPanelLateral(){
+    //Esta bien padre apoco no
+    private void alternalPanelLateral() {
         extendido = !extendido;
-        if(extendido){
+        if (extendido) {
             panelLateral.setPreferredSize(new Dimension(ANCHO_ABIERTO, 0));
         } else {
             panelLateral.setPreferredSize(new Dimension(ANCHO_CERRADO, 0));
         }
 
-        //Bucle para cambiar visible o invisible botones laterales
-        Component[] botonComponents = panelLateral.getComponents();
-        for(int i = 0; i < nombreBotones.length; i++){
-            if(i == 0){
-                botonComponents[i].setVisible(true);
+        //Bucle para cambiar visible o invisible botones laterales y los espacios en medio de cada uno
+        Component[] panelLateralComponents = panelLateral.getComponents(); //Cuenta todos los componentes del panel 
+        for (int i = 0; i < panelLateralComponents.length; i++) {
+            if (i == 0) {
+                panelLateralComponents[i].setVisible(true);
             } else {
-                botonComponents[i].setVisible(extendido);
+                panelLateralComponents[i].setVisible(extendido);
             }
         }
         //Recalcula el diseño para repintar los botones
