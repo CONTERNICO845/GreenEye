@@ -41,6 +41,7 @@ abstract class PanelBase extends JPanel {
         //Configura el panel principal donde se trabajra cada ventana
         panelPrincipal = new JPanel();
         panelPrincipal.setBackground(Color.WHITE);
+        panelPrincipal.setLayout(new CardLayout());
         this.add(panelPrincipal, BorderLayout.CENTER);
 
         //Configura el panel superior del titulo y perfil
@@ -106,7 +107,11 @@ abstract class PanelBase extends JPanel {
                 boton.setMinimumSize(NORMAL_BUTTON_SIZE);
                 boton.setMaximumSize(NORMAL_BUTTON_SIZE);
 
-
+                //Añade eventos al presioar los botones
+                boton.addActionListener(e -> {
+                    choosePanel(nombre);
+                });
+                
                 if (extendido == false) {
                     boton.setVisible(false); //Para que no se vea por defecto hasta que se extienda el panel
                 }
@@ -145,5 +150,12 @@ abstract class PanelBase extends JPanel {
         //Recalcula el diseño para repintar los botones
         panelLateral.revalidate();
         panelLateral.repaint();
+    }
+
+    //Metodo que cambia entre ventanas en el panel principal
+    private void choosePanel(String screenName) {
+        CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
+
+        cl.show(panelPrincipal, screenName);
     }
 }
