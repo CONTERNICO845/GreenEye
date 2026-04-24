@@ -1,6 +1,7 @@
 //Codigo hecho por el God Giovanni Sandoval
 import java.awt.*;
 import javax.swing.*;
+
 //Clase abstracta que solo puede crear hijos que seran las ventanas separadas
 abstract class PanelBase extends JPanel {
 
@@ -12,15 +13,8 @@ abstract class PanelBase extends JPanel {
     private boolean extendido = false;
     private final int ANCHO_CERRADO = 50;
     private final int ANCHO_ABIERTO = 200;
-    //private Timer timerAnimacion; por el momento
-
-    //Constantes para los colores a usar
-    private static final Color COLOR_VERDE_PRIMARIO = new Color(76, 175, 80);
-    private static final Color COLOR_GRIS_PRIMARIO = new Color(230, 230, 230);
-    private static  final Color COLOR_FONDO_MAIN = new Color(189, 236, 182); 
-    private final Color COLOR_IZQUIERDO = new Color(34, 60, 43);    // Verde ecológico vivo 43, 153, 99
-    private final Color COLOR_DERECHO = new Color(43, 153, 99);
-
+    //private Timer timerAnimacion; por el momento 
+    
     //Variables para los botones
     Dimension BUTTON_HOME_SIZE = new Dimension(50, 50);
     Dimension NORMAL_BUTTON_SIZE = new Dimension(230, 50);
@@ -48,7 +42,7 @@ abstract class PanelBase extends JPanel {
 
         //Configura el panel superior del titulo y perfil
         panelSuperior = new JPanel();
-        panelSuperior.setBackground(COLOR_DERECHO);
+        panelSuperior.setBackground(AppColors.COLOR_FONDO_01);
         panelSuperior.setLayout(new BorderLayout());
         this.add(panelSuperior, BorderLayout.NORTH);
 
@@ -72,7 +66,7 @@ abstract class PanelBase extends JPanel {
         panelLateral = new JPanel();
         //panelLateral.setLayout(new GridLayout(10, 1, 0, 5));
         panelLateral.setLayout(new BoxLayout(panelLateral, BoxLayout.Y_AXIS));
-        panelLateral.setBackground(COLOR_DERECHO);
+        panelLateral.setBackground(AppColors.COLOR_FONDO_01);
         panelLateral.setPreferredSize(new Dimension(ANCHO_CERRADO, 0));
         this.add(panelLateral, BorderLayout.WEST);
 
@@ -102,7 +96,7 @@ abstract class PanelBase extends JPanel {
                 });
             } else {
                 //Configura el resto de botones laterales
-                boton.setBackground(COLOR_IZQUIERDO);
+                boton.setBackground(AppColors.COLOR_BOTONES);
                 boton.setForeground(Color.WHITE);
 
                 //Tamaño de los botones

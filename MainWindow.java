@@ -15,10 +15,11 @@ class MiPanel extends PanelBase {
     }
 }
 
+//Aqui i);nicializa todo
 public class MainWindow {
 
     public static void main(String[] args) {
-        JFrame ventana = new JFrame("Prueba02");
+        JFrame ventana = new JFrame("Main window");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MiPanel contenido = new MiPanel("Mi proyecto");
 

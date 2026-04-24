@@ -4,11 +4,6 @@ import javax.swing.*;
 
 public class About_Us extends JPanel{
 
-    //Constantes de colores
-    private static final Color COLOR_VERDE_PRIMARIO = new Color(76, 175, 80);
-    private static final Color COLOR_GRIS_PRIMARIO = new Color(230, 230, 230);
-    private static  final Color COLOR_FONDO_MAIN = new Color(189, 236, 182); 
-
     //Atributos para esta pestaña
     JPanel upPanel;
     JPanel imagePanel;
@@ -28,7 +23,7 @@ public class About_Us extends JPanel{
 
     public About_Us(){
         this.setLayout(new GridLayout(2, 1));
-        this.setBackground(COLOR_FONDO_MAIN);
+        this.setBackground(AppColors.COLOR_FONDO_MAIN);
 
         //Configura el panel superior
         upPanel = new JPanel();
