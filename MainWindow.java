@@ -1,9 +1,9 @@
 //Codigo hecho por el God Giovanni Sandoval
 import javax.swing.*;
 
-class MiPanel extends PanelBase {
+class MyPanel extends PanelBase {
 
-    public MiPanel(String name) {
+    public MyPanel(String name) {
         super(name);
 
         //Para todas las ventanas, las agrega a un Cardlayout para poderlas intercambiar una a una
@@ -21,7 +21,7 @@ public class MainWindow {
     public static void main(String[] args) {
         JFrame ventana = new JFrame("Main window");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MiPanel contenido = new MiPanel("Mi proyecto");
+        MyPanel contenido = new MyPanel("Inicio");
 
         ventana.add(contenido);
         ventana.pack(); // Ajusta la ventana al tamaño del panel

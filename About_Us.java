@@ -13,12 +13,14 @@ public class About_Us extends JPanel{
     JLabel nameLabel;
 
     //Nombres de los creadores
-    static final String[] names = {"Giovanni", "Manuel", "Victor", "Isacc", "Geovani"};
+    static final String[] names = {"Giovanni", "Manuel", "Geovani", "Isacc", "Victor"};
 
     //Texto sobre nosotros
     static final int MAX_JLABEL_SIZE = 500;
     String muchoTexto = "<html><p style='width:" + MAX_JLABEL_SIZE + "px;'>" +
-                    "Somos una union estidiantil de los estados unidos mexicanos (UEEUM) " +
+                    " Somos un grupo de cinco desarrolladores e innovadores unidos por la convicción de que la tecnología avanzada, cuando se aplica con inteligencia y propósito, puede cambiar hábitos de consumo a nivel masivo. No solo estamos creando una aplicación; estamos diseñando una herramienta que empodera a cada usuario para tomar decisiones responsables de manera intuitiva y precisa.\n" + //
+                    "\n" + 
+                    "Creemos en un mañana donde el reciclaje ya no sea una duda, sino un hábito sencillo facilitado por la inteligencia artificial. Nuestro compromiso es transformar la complejidad de la clasificación de residuos en una experiencia simple, rápida y efectiva para todos. Bienvenidos a la próxima generación de la sostenibilidad." +
                     "</p></html>";
 
     public About_Us(){

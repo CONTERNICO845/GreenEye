@@ -154,5 +154,8 @@ abstract class PanelBase extends JPanel {
         CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
         
         cl.show(panelPrincipal, screenName);
+
+        String panelBaseName = screenName;
+        titulo.setText(panelBaseName);
     }
 }
