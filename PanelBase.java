@@ -6,13 +6,13 @@ import javax.swing.*;
 abstract class PanelBase extends JPanel {
 
     //Constantes para la ventana
-    public final int ANCHO_PANTALLA = 1920;
-    public final int ALTO_PANTALLA = 1080;
+    public final int SCREEN_WIDTH = 1920;
+    public final int SCREEN_HEIGHT = 1080;
 
     //Constantes para abrir y cerrar la barra lateral
-    private boolean extendido = false;
-    private final int ANCHO_CERRADO = 50;
-    private final int ANCHO_ABIERTO = 200;
+    private boolean isExpanded = false;
+    private final int CLOSED_WIDTH = 50;
+    private final int OPEN_WIDTH = 200;
     //private Timer timerAnimacion; por el momento 
     
     //Variables para los botones
@@ -21,58 +21,58 @@ abstract class PanelBase extends JPanel {
     Dimension RIGIDAREA_SIZE = new Dimension(0, 15);
 
     //Nombres de los botones de la barra lateral
-    static final String[] nombreBotones = {"", "Inicio", "Estadisticas", "Rewards", "Mapa", "Cuenta", "Configuracion", "About Us"};
+    static final String[] buttonNames = {"", "Inicio", "Estadisticas", "Rewards", "Mapa", "Cuenta", "Configuracion", "About Us"};
 
     //Atributos que solo los hijos pueden usar
-    protected JLabel titulo; //titulo de la pantalla
-    protected JPanel panelLateral; //Panel lateral de opciones
-    protected JPanel panelPrincipal; //resto de la pantalla, aqui se trabaja el interior de las ventanas
-    protected JPanel panelSuperior; //Panel donde ira el titulo y perfil
-    protected JButton botonPerfil; //Boton superior derecha del perfil
+    protected JLabel title; //titulo de la pantalla
+    protected JPanel sidePanel; //Panel lateral de opciones
+    protected JPanel mainPanel; //resto de la pantalla, aqui se trabaja el interior de las ventanas
+    protected JPanel topPanel; //Panel donde ira el titulo y perfil
+    protected JButton perfilButton; //Boton superior derecha del perfil
 
-    public PanelBase(String textoTitulo) {
+    public PanelBase(String titleText) {
         this.setLayout(new BorderLayout());
-        this.setSize(ANCHO_PANTALLA, ALTO_PANTALLA);
+        this.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         //Configura el panel principal donde se trabajra cada ventana
-        panelPrincipal = new JPanel();
-        panelPrincipal.setBackground(Color.WHITE);
-        panelPrincipal.setLayout(new CardLayout());
-        this.add(panelPrincipal, BorderLayout.CENTER);
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.WHITE);
+        mainPanel.setLayout(new CardLayout());
+        this.add(mainPanel, BorderLayout.CENTER);
 
         //Configura el panel superior del titulo y perfil
-        panelSuperior = new JPanel();
-        panelSuperior.setBackground(AppColors.COLOR_FONDO_01);
-        panelSuperior.setLayout(new BorderLayout());
-        this.add(panelSuperior, BorderLayout.NORTH);
+        topPanel = new JPanel();
+        topPanel.setBackground(AppColors.COLOR_FONDO_01);
+        topPanel.setLayout(new BorderLayout());
+        this.add(topPanel, BorderLayout.NORTH);
 
         //Configura un titulo para todas las ventanas
-        titulo = new JLabel(textoTitulo, SwingConstants.CENTER);
-        titulo.setFont(new Font("SansSerif", Font.BOLD, 26));
-        titulo.setForeground(new Color(255, 255, 255)); 
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-        panelSuperior.add(titulo, BorderLayout.CENTER);
+        title = new JLabel(titleText, SwingConstants.CENTER);
+        title.setFont(new Font("SansSerif", Font.BOLD, 26));
+        title.setForeground(new Color(255, 255, 255)); 
+        title.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+        topPanel.add(title, BorderLayout.CENTER);
 
         //Configura el boton a la derecha del perfil
-        botonPerfil = new JButton();
-        botonPerfil.setOpaque(false);
-        botonPerfil.setContentAreaFilled(false);
+        perfilButton = new JButton();
+        perfilButton.setOpaque(false);
+        perfilButton.setContentAreaFilled(false);
         //botonPerfil.setBorderPainted(false);     hasta que tenga una imagen sera false
-        botonPerfil.setPreferredSize(new Dimension(60, 50));
+        perfilButton.setPreferredSize(new Dimension(60, 50));
         //Aqui debe de ir la ruta de la imagen
-        panelSuperior.add(botonPerfil, BorderLayout.EAST);
+        topPanel.add(perfilButton, BorderLayout.EAST);
 
         //Configura le panel lateral con las opciones
-        panelLateral = new JPanel();
+        sidePanel = new JPanel();
         //panelLateral.setLayout(new GridLayout(10, 1, 0, 5));
-        panelLateral.setLayout(new BoxLayout(panelLateral, BoxLayout.Y_AXIS));
-        panelLateral.setBackground(AppColors.COLOR_FONDO_01);
-        panelLateral.setPreferredSize(new Dimension(ANCHO_CERRADO, 0));
-        this.add(panelLateral, BorderLayout.WEST);
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+        sidePanel.setBackground(AppColors.COLOR_FONDO_01);
+        sidePanel.setPreferredSize(new Dimension(CLOSED_WIDTH, 0));
+        this.add(sidePanel, BorderLayout.WEST);
 
         //Configura los botones del panel lateral
-        for (int i = 0; i < nombreBotones.length; i++) {
-            String nombre = nombreBotones[i];
+        for (int i = 0; i < buttonNames.length; i++) {
+            String nombre = buttonNames[i];
             JButton boton = new JButton(nombre);
             boton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -88,11 +88,11 @@ abstract class PanelBase extends JPanel {
                 //Le agrega la imagen ☰ al boton
                 ImageIcon icon = new ImageIcon(getClass().getResource("Imagenes/BOTONES/Boton_Home.png")); //Falta que primero lo busque y casi de que no eista
                 boton.setIcon(new ImageIcon(icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
-                boton.setText(nombreBotones[i]);
+                boton.setText(buttonNames[i]);
 
                 //Agrega evento para abrir o cerrar el panel
                 boton.addActionListener(e -> {
-                    alternalPanelLateral();
+                    toggleSidebar();
                 });
             } else {
                 //Configura el resto de botones laterales
@@ -109,53 +109,53 @@ abstract class PanelBase extends JPanel {
                     choosePanel(nombre);
                 });
 
-                if (extendido == false) {
+                if (isExpanded == false) {
                     boton.setVisible(false); //Para que no se vea por defecto hasta que se extienda el panel
                 }
             }
             //Agrega los botones al panel
-            panelLateral.add(boton);
+            sidePanel.add(boton);
 
             //Agrega espacios entre los botones
-            if (i < nombreBotones.length - 1) {
+            if (i < buttonNames.length - 1) {
             Component space = Box.createRigidArea(RIGIDAREA_SIZE);
-            space.setVisible(extendido); // Se oculta o muestra según el estado inicial
-            panelLateral.add(space);
+            space.setVisible(isExpanded); // Se oculta o muestra según el estado inicial
+            sidePanel.add(space);
         }
         }
     }
 
     //Metodo que cambia entre el panel cerrado y abierto 
     //Esta bien padre apoco no
-    private void alternalPanelLateral() {
-        extendido = !extendido;
-        if (extendido) {
-            panelLateral.setPreferredSize(new Dimension(ANCHO_ABIERTO, 0));
+    private void toggleSidebar() {
+        isExpanded = !isExpanded;
+        if (isExpanded) {
+            sidePanel.setPreferredSize(new Dimension(OPEN_WIDTH, 0));
         } else {
-            panelLateral.setPreferredSize(new Dimension(ANCHO_CERRADO, 0));
+            sidePanel.setPreferredSize(new Dimension(CLOSED_WIDTH, 0));
         }
 
         //Bucle para cambiar visible o invisible botones laterales y los espacios en medio de cada uno
-        Component[] panelLateralComponents = panelLateral.getComponents(); //Cuenta todos los componentes del panel 
-        for (int i = 0; i < panelLateralComponents.length; i++) {
+        Component[] sidebarComponents = sidePanel.getComponents(); //Cuenta todos los componentes del panel 
+        for (int i = 0; i < sidebarComponents.length; i++) {
             if (i == 0) {
-                panelLateralComponents[i].setVisible(true);
+                sidebarComponents[i].setVisible(true);
             } else {
-                panelLateralComponents[i].setVisible(extendido);
+                sidebarComponents[i].setVisible(isExpanded);
             }
         }
         //Recalcula el diseño para repintar los botones
-        panelLateral.revalidate();
-        panelLateral.repaint();
+        sidePanel.revalidate();
+        sidePanel.repaint();
     }
 
     //Metodo que cambia entre ventanas en el panel principal
     private void choosePanel(String screenName) {
-        CardLayout cl = (CardLayout) (panelPrincipal.getLayout());
+        CardLayout cl = (CardLayout) (mainPanel.getLayout());
         
-        cl.show(panelPrincipal, screenName);
+        cl.show(mainPanel, screenName);
 
         String panelBaseName = screenName;
-        titulo.setText(panelBaseName);
+        title.setText(panelBaseName);
     }
 }

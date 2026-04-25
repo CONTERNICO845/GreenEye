@@ -3,15 +3,15 @@ import javax.swing.*;
 
 class MyPanel extends PanelBase {
 
-    public MyPanel(String name) {
+    public MyPanel(String name) { 
         super(name);
 
         //Para todas las ventanas, las agrega a un Cardlayout para poderlas intercambiar una a una
-        Rewards panelRecompensas = new Rewards();
-        panelPrincipal.add(panelRecompensas, "Rewards");
+        Rewards rewardsPanel = new Rewards();
+        mainPanel.add(rewardsPanel, "Rewards");
 
-        About_Us panelAbout_Us = new About_Us();
-        panelPrincipal.add(panelAbout_Us, "About Us");
+        About_Us aboutUsPanel = new About_Us();
+        mainPanel.add(aboutUsPanel, "About Us");
     }
 }
 
