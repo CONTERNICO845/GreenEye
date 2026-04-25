@@ -64,7 +64,6 @@ abstract class PanelBase extends JPanel {
 
         //Configura le panel lateral con las opciones
         sidePanel = new JPanel();
-        //panelLateral.setLayout(new GridLayout(10, 1, 0, 5));
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.setBackground(AppColors.COLOR_FONDO_01);
         sidePanel.setPreferredSize(new Dimension(CLOSED_WIDTH, 0));

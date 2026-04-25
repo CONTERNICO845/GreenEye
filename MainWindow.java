@@ -7,6 +7,9 @@ class MyPanel extends PanelBase {
         super(name);
 
         //Para todas las ventanas, las agrega a un Cardlayout para poderlas intercambiar una a una
+        Statistics estadisticasPanel = new Statistics();
+        mainPanel.add(estadisticasPanel, "Estadisticas");
+
         Rewards rewardsPanel = new Rewards();
         mainPanel.add(rewardsPanel, "Rewards");
 
