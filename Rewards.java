@@ -1,8 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
-public class Rewards extends JFrame implements ActionListener {
+public class Rewards extends JPanel implements ActionListener {
 
     // Constantes para los valores de puntos y créditos
     private static final int PUNTOS_AGREGAR = 50;
@@ -50,11 +50,7 @@ public class Rewards extends JFrame implements ActionListener {
 
         add(panelCuadros, BorderLayout.CENTER);
 
-        setTitle("Rewards");
         setSize(500, 300);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     private JButton crearBoton(String texto, Color color) {

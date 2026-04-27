@@ -10,8 +10,8 @@ class MyPanel extends PanelBase {
         Statistics estadisticasPanel = new Statistics();
         mainPanel.add(estadisticasPanel, "Estadisticas");
 
-        //Rewards rewardsPanel = new Rewards();
-        //mainPanel.add(rewardsPanel, "Rewards");
+        Rewards rewardsPanel = new Rewards();
+        mainPanel.add(rewardsPanel, "Rewards");
 
         About_Us aboutUsPanel = new About_Us();
         mainPanel.add(aboutUsPanel, "About Us");
