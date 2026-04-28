@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 //Codigo hecho por el God Giovanni Sandoval
+=======
+>>>>>>> Stashed changes
 import java.awt.*;
 import javax.swing.*;
 
@@ -89,7 +92,7 @@ abstract class PanelBase extends JPanel {
                 boton.setIcon(new ImageIcon(icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
                 boton.setText(buttonNames[i]);
 
-                //Agrega evento para abrir o cerrar el panel
+                //Agrega evento para abrir o cerrar el panel, Gracias We
                 boton.addActionListener(e -> {
                     toggleSidebar();
                 });
@@ -101,6 +104,12 @@ abstract class PanelBase extends JPanel {
                 //Tamaño de los botones
                 boton.setMinimumSize(NORMAL_BUTTON_SIZE);
                 boton.setMaximumSize(NORMAL_BUTTON_SIZE);
+                boton.setFocusPainted(false);
+                
+                if (nombre. equals("Configuracion")){
+                    boton.addActionListener(e -> abrirVentanaConfiguracion());    
+                }
+        
 
                 //Añade eventos al presioar los botones
                 boton.addActionListener(e -> {
@@ -118,12 +127,60 @@ abstract class PanelBase extends JPanel {
             //Agrega espacios entre los botones
             if (i < buttonNames.length - 1) {
             Component space = Box.createRigidArea(RIGIDAREA_SIZE);
+<<<<<<< Updated upstream
             space.setVisible(isExpanded); // Se oculta o muestra según el estado inicial
             sidePanel.add(space);
         }
+=======
+            space.setVisible(extendido); // Se oculta o muestra según el estado inicial
+            panelLateral.add(space);
+             }
+>>>>>>> Stashed changes
         }
     }
 
+    private void abrirVentanaConfiguracion() {
+        // 1. Limpiamos lo que haya en el panel principal
+        panelPrincipal.removeAll();
+        panelPrincipal.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20)); // Layout para los botones nuevos
+        
+        // 2. Cambiamos el título para que el usuario sepa dónde está
+        titulo.setText("Configuración del Sistema");
+
+        // 3. Creamos botones nuevos para la pantalla PRINCIPAL
+
+        JButton btnOpcion1 = new JButton("Cambiar Contraseña");
+        JButton btnOpcion2 = new JButton("Modo Oscuro");
+        JButton btnOpcion3 = new JButton( "Eliminar Cuenta");
+        // Aqui se cambian los colores para que no se vea tan plano y feo
+        btnOpcion1.setBackground(COLOR_VERDE_PRIMARIO);
+        btnOpcion1.setForeground(Color.WHITE);
+        btnOpcion1.setFocusPainted(false );
+        //Color Gris 
+        btnOpcion2.setBackground(new Color(60, 60, 60));
+        btnOpcion2.setForeground(Color.WHITE);
+        btnOpcion2.setFocusPainted(false);
+        //Color Rojo
+        btnOpcion3.setBackground(new Color(211, 47, 47));
+        btnOpcion3.setForeground(Color.WHITE);
+        btnOpcion3.setFocusPainted(false);
+        
+        // Estilizamos un poco para que no se vean simples
+        btnOpcion1.setPreferredSize(new Dimension(200, 100));
+        btnOpcion2.setPreferredSize(new Dimension(200, 100));
+        btnOpcion3.setPreferredSize(new Dimension(200, 100));
+
+
+        // 4. Los añadimos al panel principal (no al lateral)
+        panelPrincipal.add(btnOpcion1);
+        panelPrincipal.add(btnOpcion2);
+        panelPrincipal.add(btnOpcion3);
+
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+        
+        System.out.println("Cambiando a pestaña de configuración... perfectirijillo");
+    }
     //Metodo que cambia entre el panel cerrado y abierto 
     //Esta bien padre apoco no
     private void toggleSidebar() {
