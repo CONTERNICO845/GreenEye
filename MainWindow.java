@@ -15,6 +15,9 @@ class MyPanel extends PanelBase {
 
         About_Us aboutUsPanel = new About_Us();
         mainPanel.add(aboutUsPanel, "About Us");
+
+        Configuracion configuracionPanel = new Configuracion();
+        mainPanel.add(configuracionPanel, "Configuracion");
     }
 }
 
