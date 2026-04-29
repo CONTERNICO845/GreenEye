@@ -86,22 +86,27 @@ abstract class PayChartInfo extends JPanel {
 
 abstract class Podium extends JPanel{
 
-    public static final int peopleAmount = 5;
+    public static final int peopleAmount = 10;
 
     public Podium(){
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(AppColors.COLOR_FONDO_MAIN);
 
+        this.add(Box.createVerticalStrut(100));
+
         JPanel podium = new JPanel();
         podium.setLayout(new BoxLayout(podium, BoxLayout.Y_AXIS));
-        podium.setMaximumSize(new Dimension(300, 500));
+        podium.setMaximumSize(new Dimension(300, 515));
         podium.setBackground(AppColors.COLOR_BOTONES);
+        podium.setBorder(BorderFactory.createLineBorder(AppColors.COLOR_WHITE, 5));
 
         for(int i = 1; i <=peopleAmount; i++){
 
             JLabel place = new JLabel("#" + i);
             place.setFont(new Font("SansSerif", Font.BOLD, 26));
+            place.setForeground(AppColors.COLOR_WHITE);
+            place.setOpaque(false);
 
             //Label para el nombre de usuario, falta por la base de datos
 
@@ -111,11 +116,15 @@ abstract class Podium extends JPanel{
             JPanel users = new JPanel();
             users.setLayout(new BoxLayout(users, BoxLayout.X_AXIS));
             users.add(place);
+            users.setOpaque(false);
+
+            //Deja un espacio
+            podium.add(Box.createVerticalStrut(15));
 
             podium.add(users);
-            this.add(podium);
-
             users.setVisible(true);
         }
+
+        this.add(podium);
     }
 }
