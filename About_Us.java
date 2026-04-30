@@ -26,7 +26,7 @@ public class About_Us extends JPanel{
 
     public About_Us(){
         this.setLayout(new GridLayout(2, 1));
-        this.setBackground(AppColors.COLOR_FONDO_MAIN);
+        this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
 
         //Configura el panel superior
         topPanel = new JPanel();

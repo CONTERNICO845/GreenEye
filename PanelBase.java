@@ -42,7 +42,7 @@ abstract class PanelBase extends JPanel {
 
         //Configura el panel superior del titulo y perfil
         topPanel = new JPanel();
-        topPanel.setBackground(AppColors.COLOR_FONDO_01);
+        topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
         topPanel.setLayout(new BorderLayout());
         this.add(topPanel, BorderLayout.NORTH);
 
@@ -65,7 +65,7 @@ abstract class PanelBase extends JPanel {
         //Configura le panel lateral con las opciones
         sidePanel = new JPanel();
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-        sidePanel.setBackground(AppColors.COLOR_FONDO_01);
+        sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
         sidePanel.setPreferredSize(new Dimension(CLOSED_WIDTH, 0));
         this.add(sidePanel, BorderLayout.WEST);
 
@@ -95,7 +95,7 @@ abstract class PanelBase extends JPanel {
                 });
             } else {
                 //Configura el resto de botones laterales
-                boton.setBackground(AppColors.COLOR_BOTONES);
+                boton.setBackground(AppColors.COLOR_MAIN_BUTTONS);
                 boton.setForeground(Color.WHITE);
 
                 //Tamaño de los botones
@@ -120,6 +120,8 @@ abstract class PanelBase extends JPanel {
             Component space = Box.createRigidArea(RIGIDAREA_SIZE);
             space.setVisible(isExpanded); // Se oculta o muestra según el estado inicial
             sidePanel.add(space);
+
+            boton.setFocusPainted(false);
         }
         }
     }
