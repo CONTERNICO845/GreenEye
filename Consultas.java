@@ -24,7 +24,7 @@ public class Consultas {
     }
 
     // Método para el Registro actualizado con fecha
-    public void registrarUsuario(String correo, String password) {
+    public void registrarUsuario(String correo, String password, String userName) {
         try (Connection conn = DatabaseConnection.conectar();
              Statement stmt = conn.createStatement()) {
             
