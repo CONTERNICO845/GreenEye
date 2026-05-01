@@ -23,25 +23,23 @@ public class Configuracion extends JPanel implements ActionListener {
 
         // Colores y Estilo
         btnOpcion1.setBackground(new Color(76, 175, 80));
-        btnOpcion1.setForeground(Color.WHITE);
         btnOpcion1.setFocusPainted(false);
         btnOpcion1.setPreferredSize(new Dimension(200, 100));
 
         btnOpcion2.setBackground(new Color(60, 60, 60));
-        btnOpcion2.setForeground(Color.WHITE);
         btnOpcion2.setFocusPainted(false);
         btnOpcion2.setPreferredSize(new Dimension(200, 100));
 
         btnOpcion3.setBackground(new Color(211, 47, 47));
-        btnOpcion3.setForeground(Color.WHITE);
         btnOpcion3.setFocusPainted(false);
         btnOpcion3.setPreferredSize(new Dimension(200, 100));
 
+        aplicacarColores();
         // Listeners
         btnOpcion1.addActionListener(this);
         btnOpcion2.addActionListener(this);
         btnOpcion3.addActionListener(this);
-
+        
         // Agregamos los botones directamente al panel (this)
         this.add(btnOpcion1);
         this.add(btnOpcion2);
@@ -52,8 +50,8 @@ public class Configuracion extends JPanel implements ActionListener {
         this.setBackground(Color.BLACK);
 
         btnOpcion1.setBackground(AppColors.COLOR_GREEN_CLARO);
-        btnOpcion2.setBackground(AppColors.COLOR_GREEN_CLARO);
-        btnOpcion3.setBackground(AppColors.COLOR_GREEN_CLARO); 
+        btnOpcion2.setBackground(AppColors.COLOR_WHITE);
+        btnOpcion3.setBackground(AppColors.COLOR_ROJO_CLARO); 
 
         btnOpcion1.setForeground(Color.BLACK);
         btnOpcion2.setForeground(Color.BLACK);
@@ -83,14 +81,15 @@ public class Configuracion extends JPanel implements ActionListener {
         esModoObscuro = !esModoObscuro;
         if (esModoObscuro) {
             btnOpcion2.setText("Modo Claro");
-
         }else{
             btnOpcion2.setText("Modo Obscuro");
-
+        
+        }
             aplicacarColores();
+            this.revalidate();
             this.repaint();
 
-        }    
+           
         } else if (e.getSource() == btnOpcion3) {
             System.out.println("Eliminando cuenta... ¡Cuidado!");
         }
