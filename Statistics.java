@@ -55,6 +55,7 @@ public class Statistics extends JPanel {
         share = new JButton("Compartir");
 
         //Por el momento no los pide de la base de datos
+        //Pide los valores a la base de datos
         double[] values = {40, 30, 20, 15};
 
         MyPay myGraphic = new MyPay(values);
