@@ -4,6 +4,7 @@ import java.net.*;
 
 public class PythonConector{
 
+    //Se debe de llamar para enviar la imagen a python
     public static String sendImageBase64(String base64Image){
         try {
             URL url = new URL("http://127.0.0.1:5000/image");

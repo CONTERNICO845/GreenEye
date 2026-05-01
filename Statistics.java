@@ -52,7 +52,12 @@ public class Statistics extends JPanel {
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0));
 
+        //Boton para compartir
         share = new JButton("Compartir");
+        share.setFocusPainted(false);
+        share.addActionListener(e -> {
+            //Falta ponerle accion
+        });
 
         //Por el momento no los pide de la base de datos
         //Pide los valores a la base de datos

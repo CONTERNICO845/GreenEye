@@ -7,7 +7,7 @@ from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_i
 
 print("Despertando a la IA...")
 modelo = MobileNetV2(weights='imagenet')
-print("¡IA lista!")
+print("IA lista")
 
 def clasificar_basura(image_base64):
     if "," in image_base64:
