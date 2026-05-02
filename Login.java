@@ -145,7 +145,7 @@ public class Login extends JFrame {
                 }
 
                 Consultas consultas = new Consultas();
-                if (consultas.validarUsuario(correo, pass)) {
+                if (consultas.validateUser(correo, pass)) {
                     JOptionPane.showMessageDialog(Login.this, "¡Bienvenido al sistema!", "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
 
@@ -251,7 +251,7 @@ public class Login extends JFrame {
                 String randomString = String.valueOf(randomValue);
 
                 Consultas consultas = new Consultas();
-                consultas.registrarUsuario(correo, pass, userName, randomString);
+                consultas.registerUser(correo, pass, userName, randomString);
 
                 JOptionPane.showMessageDialog(Login.this, "Registrado",
                         "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);

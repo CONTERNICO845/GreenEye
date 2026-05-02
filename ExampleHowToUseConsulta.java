@@ -2,91 +2,93 @@ import java.util.Scanner;
 
 public class ExampleHowToUseConsulta {
 
-    // CONTRASEÑA
-    /*
-     * USARIO: admin
-     * Correo: admin@gmail.com
-     * Contraseña: admin123
-     */
     public static void main(String[] args) {
         Consultas consultas = new Consultas();
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("--- 🚀 MÓDULO DE PRUEBAS RÁPIDAS - EQUIPO MCQUACK ---");
-
-        System.out.println("1. Iniciar Sesión (Normal)");
-        System.out.println("2. Saltar Inicio de Sesión (Modo Debug)");
-        System.out.print("Selecciona cómo entrar: ");
+        System.out.println("--- 🚀 MÓDULO DE PRUEBAS - EQUIPO MCQUACK ---");
+        System.out.println("1. Iniciar Sesión");
+        System.out.println("2. Modo Debug (ID 1)");
+        System.out.print("Selecciona: ");
+        
         int modo = sc.nextInt();
-        sc.nextLine(); // Limpiar buffer
+        sc.nextLine(); 
 
         if (modo == 2) {
-            // Saltamos el login asignando el ID manualmente
-            Consultas.idUsuarioLogueado = 1; // Asumimos que el primer usuario es el ID 1
-            System.out.println("⚠️ Saltando login... Usando ID: " + Consultas.idUsuarioLogueado);
+            Consultas.loggedUserId = 1; // Ajustado al nombre real en tu clase Consultas
+            System.out.println("⚠️ Modo Debug activado. Usuario ID: 1");
             abrirMenuPrincipal(consultas, sc);
         } else {
-            // Flujo normal de login
-            System.out.print("Introduce correo: ");
+            System.out.print("Correo: ");
             String correo = sc.nextLine();
-            System.out.print("Introduce contraseña: ");
+            System.out.print("Contraseña: ");
             String pass = sc.nextLine();
 
-            if (consultas.validarUsuario(correo, pass)) {
-                System.out.println("✅ Login correcto.");
+            if (consultas.validateUser(correo, pass)) {
+                System.out.println("✅ Bienvenido, " + correo);
                 abrirMenuPrincipal(consultas, sc);
             } else {
-                System.out.println("❌ Credenciales incorrectas.");
+                System.out.println("❌ Error: Usuario o contraseña no válidos.");
             }
         }
-
-        System.out.println("Saliendo del programa...");
         sc.close();
     }
 
-    // Encapsulamos el menú en una función aparte para que el código sea más limpio
     public static void abrirMenuPrincipal(Consultas consultas, Scanner sc) {
         boolean salir = false;
 
         while (!salir) {
-            System.out.println("\n--- 📊 PANEL DE CONTROL DE DATOS ---");
-            System.out.println("1. Ver Puntos Totales");
-            System.out.println("2. Ver Estadísticas de Materiales");
-            System.out.println("3. Cambiar Contraseña");
-            System.out.println("4. Ver ID de Foto");
-            System.out.println("5. Salir al Inicio");
-            System.out.print("Selecciona opción: ");
+            System.out.println("\n--- 📊 PANEL DE CONTROL ---");
+            System.out.println("1. Mis Puntos y Materiales");
+            System.out.println("2. Ver TOP 10 Usuarios");
+            System.out.println("3. Estadísticas Globales (Toda la App)");
+            System.out.println("4. Cambiar mi Contraseña");
+            System.out.println("5. Ver ID de Foto");
+            System.out.println("6. Salir");
+            System.out.print("Opción: ");
 
             int opcion = sc.nextInt();
             sc.nextLine();
 
-            /*
-             * USARIO: admin
-             * Correo: admin@gmail.com
-             * Contraseña: admin123
-             */
-
             switch (opcion) {
                 case 1:
-                    System.out.println("💰 Puntos: " + consultas.consultarPuntos());
+                    System.out.println("\n--- 👤 MIS ESTADÍSTICAS ---");
+                    System.out.println("💰 Total Puntos: " + consultas.getPoints());
+                    System.out.println("  ↳ 🧊 Vidrio: " + consultas.getGlassPoints());
+                    System.out.println("  ↳ 🥤 Plástico: " + consultas.getPlasticPoints());
+                    System.out.println("  ↳ 🏗️ Metal: " + consultas.getMetalPoints());
+                    System.out.println("  ↳ ⚠️ Difícil: " + consultas.getHardToRecyclePoints());
                     break;
                 case 2:
-                    System.out.println("♻️ VIDRIO: " + consultas.consultarGlass());
-                    System.out.println("♻️ PLÁSTICO: " + consultas.consultarPlastic());
-                    System.out.println("♻️ METAL: " + consultas.consultarMetal());
-                    System.out.println("♻️ DIFÍCIL: " + consultas.consultarDifilResiclaje());
+                    consultas.getTopTenUsers();
                     break;
                 case 3:
-                    System.out.print("Nueva contraseña: ");
-                    consultas.changesPassword(sc.nextLine());
+                    mostrarTotalesGlobales(consultas);
                     break;
                 case 4:
-                    System.out.println("🖼️ Foto ID: " + consultas.consultarFoto());
+                    System.out.print("Nueva contraseña: ");
+                    consultas.updatePassword(sc.nextLine());
                     break;
                 case 5:
+                    System.out.println("🖼️ Tu ID de foto es: " + consultas.getPhoto());
+                    break;
+                case 6:
                     salir = true;
                     break;
+                default:
+                    System.out.println("Opción no válida.");
             }
         }
+    }
+
+    // Nueva función para comprobar el impacto total de la app
+    public static void mostrarTotalesGlobales(Consultas consultas) {
+        System.out.println("\n--- 🌍 IMPACTO GLOBAL DE LA COMUNIDAD ---");
+        System.out.println("✨ Puntos totales generados: " + consultas.getTotalPoints());
+        System.out.println("🧊 Vidrio reciclado: " + consultas.getTotalGlass());
+        System.out.println("🥤 Plástico reciclado: " + consultas.getTotalPlastic());
+        System.out.println("🏗️ Metal reciclado: " + consultas.getTotalMetal());
+        System.out.println("⚠️ Material difícil: " + consultas.getTotalHardToRecycle());
+        System.out.println("------------------------------------------");
     }
 }

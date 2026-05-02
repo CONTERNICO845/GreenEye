@@ -5,34 +5,39 @@ import java.time.LocalDate;
 
 public class Consultas {
 
-    public static int idUsuarioLogueado = -1;
+    public static int loggedUserId = -1;
 
     // Metodo para inicar secion en el login
-    public boolean validarUsuario(String correo, String password) {
+    public boolean validateUser(String email, String password) {
+
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
 
             if (conn == null)
                 return false;
 
-            String query = "SELECT * FROM users WHERE email = '" + correo + "' AND password = '" + password + "'";
+            String query = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) { // Si encuentra el usuario, devuelve true
-                idUsuarioLogueado = rs.getInt("id");
+
+                loggedUserId = rs.getInt("id");
                 return true;
+
             }
 
             return false;
 
         } catch (Exception e) {
+
             System.out.println("Error en consulta: " + e.getMessage());
             return false;
+
         }
     }
 
     // Método para registrar usario en la base de datos
-    public void registrarUsuario(String correo, String password, String userName, String randomString) {
+    public void registerUser(String email, String password, String userName, String randomString) {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -41,24 +46,26 @@ public class Consultas {
                 return;
 
             // 1. Obtenemos la fecha de hoy automáticamente
-            String fechaCreacion = LocalDate.now().toString();
+            String creationDate = LocalDate.now().toString();
 
             // 2. Inyectamos correo, password y la fecha en la tabla
             String query = "INSERT INTO users (user_Name,email, password, creation_date, user_photo) VALUES ('"
                     + userName + "','"
-                    + correo + "', '" + password + "', '" + fechaCreacion + "' , '" + randomString + "')";
+                    + email + "', '" + password + "', '" + creationDate + "' , '" + randomString + "')";
 
             stmt.executeUpdate(query);
-            System.out.println("✅ Usuario registrado con éxito el día: " + fechaCreacion);
+            System.out.println("✅ Usuario registrado con éxito el día: " + creationDate);
 
         } catch (Exception e) {
+
             System.out.println("❌ Error al registrar: " + e.getMessage());
+
         }
 
     }
 
     // Metodo para cambiar la contraseña :)
-    public void changesPassword(String nuevaPassword) {
+    public void updatePassword(String newPassword) {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -66,22 +73,26 @@ public class Consultas {
             if (conn == null)
                 return;
 
-            String query = "UPDATE users SET password = '" + nuevaPassword + "' WHERE id = " + idUsuarioLogueado;
+            String query = "UPDATE users SET password = '" + newPassword + "' WHERE id = " + loggedUserId;
 
-            int usuario = stmt.executeUpdate(query);
+            int user = stmt.executeUpdate(query);
 
-            if (usuario > 0) {
+            if (user > 0) {
+
                 System.out.println("Cambio de contraseña exitoso");
+
             }
 
         } catch (Exception e) {
+
             System.out.println("Error al cambiar la contraseña: " + e.getMessage());
+
         }
 
     }
 
     // Metodo para consultar los puntos del usario
-    public int consultarPuntos() {
+    public int getPoints() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -89,23 +100,27 @@ public class Consultas {
             if (conn == null)
                 return 0;
 
-            String query = "SELECT points FROM users WHERE id = " + idUsuarioLogueado;
+            String query = "SELECT points FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
-                int puntos = rs.getInt("points");
-                return puntos;
+
+                int points = rs.getInt("points");
+                return points;
+
             }
 
         } catch (Exception e) {
+
             System.out.println("Error al consultar los puntos: " + e.getMessage());
+
         }
 
         return 0;
     }
 
     // Consulta los puntos de Vidrios
-    public int consultarGlass() {
+    public int getGlassPoints() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -113,16 +128,20 @@ public class Consultas {
             if (conn == null)
                 return 0;
 
-            String query = "SELECT glass FROM users WHERE id = " + idUsuarioLogueado;
+            String query = "SELECT glass FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
-                int pointsGlass = rs.getInt("glass");
-                return pointsGlass;
+
+                int glassPoints = rs.getInt("glass");
+                return glassPoints;
+
             }
 
         } catch (Exception e) {
+
             System.out.println("Error al consultar los putnos de vidrios: " + e.getMessage());
+
         }
 
         return 0;
@@ -130,7 +149,7 @@ public class Consultas {
     }
 
     // Consulta los puntos de Platico
-    public int consultarPlastic() {
+    public int getPlasticPoints() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -138,16 +157,20 @@ public class Consultas {
             if (conn == null)
                 return 0;
 
-            String query = "SELECT plastic FROM users WHERE id = " + idUsuarioLogueado;
+            String query = "SELECT plastic FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
-                int pointsPlastic = rs.getInt("plastic");
-                return pointsPlastic;
+
+                int plasticPoints = rs.getInt("plastic");
+                return plasticPoints;
+
             }
 
         } catch (Exception e) {
+
             System.out.println("Error al consultar los puntos del Platico: " + e.getMessage());
+
         }
 
         return 0;
@@ -155,7 +178,7 @@ public class Consultas {
     }
 
     // Consulta los puntos del Metal
-    public int consultarMetal() {
+    public int getMetalPoints() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -163,12 +186,14 @@ public class Consultas {
             if (conn == null)
                 return 0;
 
-            String query = "SELECT metal FROM users WHERE id = " + idUsuarioLogueado;
+            String query = "SELECT metal FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
-                int pointsMetal = rs.getInt("metal");
-                return pointsMetal;
+
+                int metalPoints = rs.getInt("metal");
+                return metalPoints;
+
             }
 
         } catch (Exception e) {
@@ -179,7 +204,7 @@ public class Consultas {
 
     }
 
-    public int consultarDifilResiclaje() {
+    public int getHardToRecyclePoints() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -187,15 +212,18 @@ public class Consultas {
             if (conn == null)
                 return 0;
 
-            String query = "SELECT hard_to_recycle FROM users WHERE id = " + idUsuarioLogueado;
+            String query = "SELECT hard_to_recycle FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
-                int pointsHard = rs.getInt("hard_to_recycle");
-                return pointsHard;
+
+                int hardPoints = rs.getInt("hard_to_recycle");
+                return hardPoints;
+
             }
 
         } catch (Exception e) {
+
             System.out.println("Error al consultar los puntos del Metal: " + e.getMessage());
         }
 
@@ -204,28 +232,288 @@ public class Consultas {
     }
 
     // Consulta el numero de foto del usuario actual
-    public int consultarFoto() {
+    public String getPhoto() {
 
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return null;
+
+            String query = "SELECT user_photo FROM users WHERE id = " + loggedUserId;
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                return rs.getString("user_photo");
+            
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar la foto: " + e.getMessage());
+        }
+        return null;
+    }
+
+    // Agregamos Puntos al usuario
+    public void updatePoints(int pointsToAdd) {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET points = points + " + pointsToAdd + " WHERE id = " + loggedUserId;
+
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int totalCurrentPoints = getPoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos. Total actual: " + totalCurrentPoints);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar los puntos: " + e.getMessage());
+
+        }
+
+    }
+
+    // Update para Vidrio
+    public void updateGlassPoints(int pointsToAdd) {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET glass = glass + " + pointsToAdd + " WHERE id = " + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int total = getGlassPoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Vidrio. Total: " + total);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar puntos de vidrio: " + e.getMessage());
+
+        }
+    }
+
+    // Update para Plástico
+    public void updatePlasticPoints(int pointsToAdd) {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET plastic = plastic + " + pointsToAdd + " WHERE id = " + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int total = getPlasticPoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Plástico. Total: " + total);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar puntos de plástico: " + e.getMessage());
+
+        }
+    }
+
+    // Update para Metal
+    public void updateMetalPoints(int pointsToAdd) {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET metal = metal + " + pointsToAdd + " WHERE id = " + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int total = getMetalPoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Metal. Total: " + total);
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar puntos de metal: " + e.getMessage());
+
+        }
+    }
+
+    // Update para Reciclaje Difícil
+    public void updateHardToRecyclePoints(int pointsToAdd) {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET hard_to_recycle = hard_to_recycle + " + pointsToAdd + " WHERE id = "
+                    + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int total = getHardToRecyclePoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Difícil Reciclaje. Total: " + total);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar puntos de reciclaje difícil: " + e.getMessage());
+
+        }
+    }
+
+    // Obtener el total de vidrio de TODOS los usuarios
+    public int getTotalPoints() {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
 
             if (conn == null)
                 return 0;
 
-            String query = "SELECT user_photo FROM users WHERE id = " + idUsuarioLogueado;
+            String query = "SELECT SUM(points) FROM users";
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
-                int numeroFoto = rs.getInt("user_photo");
-                return numeroFoto;
+                return rs.getInt(1);
             }
 
         } catch (Exception e) {
-            System.out.println("Error al consultar el numero de foto: " + e.getMessage());
+            System.out.println("Error al consultar el total global de Puntos: " + e.getMessage());
         }
-
         return 0;
+    }
 
+    // Obtener el total de vidrio de TODOS los usuarios
+    public int getTotalGlass() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(glass) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de vidrio: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Obtener el total de plástico de TODOS los usuarios
+    public int getTotalPlastic() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(plastic) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de plástico: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Obtener el total de metal de TODOS los usuarios
+    public int getTotalMetal() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(metal) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de metal: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Obtener el total de difícil reciclaje de TODOS los usuarios
+    public int getTotalHardToRecycle() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(hard_to_recycle) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de reciclaje difícil: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Consulta del top 10 usarios con mas puntos
+    // "1% yo alias CONTENRICO y 99% IA alias Gemini"
+    public void getTopTenUsers() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return;
+
+            // Consultamos el nombre y puntos, ordenando de forma descendente (DESC) y
+            // limitando a 10
+            String query = "SELECT user_Name, points FROM users ORDER BY points DESC LIMIT 10";
+            ResultSet rs = stmt.executeQuery(query);
+
+            System.out.println("--- TOP 10 USUARIOS ---");
+            int rank = 1;
+
+            while (rs.next()) {
+                String name = rs.getString("user_Name");
+                int points = rs.getInt("points");
+                System.out.println(rank + ". " + name + " - " + points + " puntos");
+                rank++;
+            }
+            System.out.println("-----------------------");
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el top 10: " + e.getMessage());
+        }
     }
 
 }
