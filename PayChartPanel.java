@@ -27,7 +27,7 @@ abstract class PayChartPanel extends JPanel {
         this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
 
         //ActionPerformed para la animacion 
-        timer = new Timer(40, new ActionListener() {
+        timer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 progress += 0.02; // Es lo que aumenta cada tick que pasa
@@ -130,11 +130,11 @@ abstract class Podium extends JPanel{
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
 
-        this.add(Box.createVerticalStrut(100));
+        this.add(Box.createVerticalStrut(70));
 
         JPanel podium = new JPanel();
         podium.setLayout(new BoxLayout(podium, BoxLayout.Y_AXIS));
-        podium.setMaximumSize(new Dimension(300, 515));
+        podium.setMaximumSize(new Dimension(400, 515));
         podium.setBackground(AppColors.COLOR_MAIN_BUTTONS);
         podium.setBorder(BorderFactory.createLineBorder(AppColors.COLOR_WHITE, 5));
 

@@ -5,15 +5,6 @@ class MyPanel extends PanelBase {
 
     public MyPanel(String name) { 
         super(name);
-
-        //Para todas las ventanas, las agrega a un Cardlayout para poderlas intercambiar una a una
-        Statistics estadisticasPanel = new Statistics();
-
-        Rewards rewardsPanel = new Rewards();
-
-        About_Us aboutUsPanel = new About_Us();
-
-        Configuracion configuracionPanel = new Configuracion();
     }
 }
 

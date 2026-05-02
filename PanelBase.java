@@ -42,7 +42,8 @@ abstract class PanelBase extends JPanel {
         if (Configuracion.esModoObscuro == false) {
             mainPanel.setBackground(Color.WHITE);
         } else if (Configuracion.esModoObscuro == true) {
-            //Aun nada
+            
+            mainPanel.setBackground(AppColors.COLOR_BLACK);
         }
 
         //Configura el panel superior del titulo y perfil
@@ -52,13 +53,13 @@ abstract class PanelBase extends JPanel {
         if (Configuracion.esModoObscuro == false) {
             topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
         } else if (Configuracion.esModoObscuro == true) {
-            //Aun nada
+            topPanel.setBackground(AppColors.COLOR_PANEL_DARK);
         }
 
         //Configura un titulo para todas las ventanas
         title = new JLabel(titleText, SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 26));
-        title.setForeground(new Color(255, 255, 255));  //Tal vez cambie el color
+        title.setForeground(AppColors.COLOR_WHITE);  
         title.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         topPanel.add(title, BorderLayout.CENTER);
 
@@ -81,7 +82,7 @@ abstract class PanelBase extends JPanel {
         if (Configuracion.esModoObscuro == false) {
             sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
         } else if (Configuracion.esModoObscuro == true) {
-            //Aun no hay color
+            sidePanel.setBackground(AppColors.COLOR_PANEL_DARK);
         }
 
         //Configura los botones del panel lateral
@@ -114,7 +115,8 @@ abstract class PanelBase extends JPanel {
                     boton.setBackground(AppColors.COLOR_MAIN_BUTTONS);
                     boton.setForeground(Color.WHITE);
                 } else if (Configuracion.esModoObscuro == true) {
-                    //Aun no tenemos colores
+                    boton.setBackground(AppColors.COLOR_BUTTON_DARK);
+                    boton.setForeground(AppColors.COLOR_WHITE);
                 }
 
                 //Tamaño de los botones
@@ -175,35 +177,52 @@ abstract class PanelBase extends JPanel {
         mainPanel.removeAll();
         JPanel newScreen = null;
 
-        switch (screenName){
-            case "Inicio":
-
-                break;
-            case "Estadisticas":
-                newScreen = new Statistics();
-                break;
-            case "Rewards":
-                newScreen = new Rewards();
-                break;
-            case "Mapa":
-                break;
-            case "Cuenta":
-                break;
-            case "Configuracion":
-                newScreen = new Configuracion();
-                break;
-            case "About Us":
-                newScreen = new About_Us();
-                break;
-            default:
-                newScreen = new JPanel();
-                break;
-        }
+        newScreen = switch (screenName) {
+            case "Inicio" -> new JPanel();
+            case "Estadisticas" -> new Statistics();
+            case "Rewards" -> new Rewards();
+            case "Mapa" -> new JPanel();
+            case "Cuenta" -> new JPanel();
+            case "Configuracion" -> new Configuracion();
+            case "About Us" -> new About_Us();
+            default -> new JPanel();
+        };
 
         mainPanel.add(newScreen, BorderLayout.CENTER);
         title.setText(screenName);
 
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    //Cambia a modo oscuro
+    public void darkMode() {
+        if (Configuracion.esModoObscuro == false) {
+            mainPanel.setBackground(Color.WHITE);
+            topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+        } else if (Configuracion.esModoObscuro == true) {
+            mainPanel.setBackground(AppColors.COLOR_BLACK);
+            topPanel.setBackground(AppColors.COLOR_PANEL_DARK);
+            sidePanel.setBackground(AppColors.COLOR_PANEL_DARK);
+        }
+
+        Component[] sidebarComponents = sidePanel.getComponents();
+        for (int i = 0; i < sidebarComponents.length; i++) {
+            if (sidebarComponents[i] instanceof JButton boton) {
+                if (i != 0 && !boton.getText().isEmpty()) {
+                    if (Configuracion.esModoObscuro == false) {
+                        boton.setBackground(AppColors.COLOR_MAIN_BUTTONS);
+                        boton.setForeground(Color.WHITE);
+                    } else if (Configuracion.esModoObscuro == true) {
+                        boton.setBackground(AppColors.COLOR_BUTTON_DARK);
+                        boton.setForeground(AppColors.COLOR_WHITE);
+                    }
+                }
+            }
+        }
+        
+        this.revalidate();
+        this.repaint();
     }
 }
