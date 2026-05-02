@@ -12,6 +12,8 @@ CREATE TABLE users (
     plastic INT DEFAULT 0,
     metal INT DEFAULT 0,
     hard_to_recycle INT DEFAULT 0,
-    user_photo VARCHAR(100) NOT NULL,
+    paper INT DEFAULT 0,
+    organic INT DEFAULT 0,
+    user_photo VARCHAR(100) NOT NULL
 );
 -- clasificador.db

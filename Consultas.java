@@ -231,6 +231,52 @@ public class Consultas {
 
     }
 
+    public String getPaper() {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return null;
+
+            String query = "SELECT paper FROM users WHERE id = " + loggedUserId;
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                return rs.getString("paper");
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el papel: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String getOrganic() {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return null;
+
+            String query = "SELECT organic FROM users WHERE id = " + loggedUserId;
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                return rs.getString("organic");
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar lo organico: " + e.getMessage());
+        }
+        return null;
+    }
+
     // Consulta el numero de foto del usuario actual
     public String getPhoto() {
 
@@ -246,7 +292,7 @@ public class Consultas {
             if (rs.next()) {
 
                 return rs.getString("user_photo");
-            
+
             }
 
         } catch (Exception e) {
@@ -381,6 +427,54 @@ public class Consultas {
         }
     }
 
+    public void updatePaperPoints(int pointsToAdd) {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET paper = paper + " + pointsToAdd + " WHERE id = "
+                    + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int total = getHardToRecyclePoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de papel. Total: " + total);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar puntos de papel: " + e.getMessage());
+
+        }
+    }
+
+    public void updateOrganicPoints(int pointsToAdd) {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET organic = organic + " + pointsToAdd + " WHERE id = "
+                    + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int total = getHardToRecyclePoints();
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de organico. Total: " + total);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar puntos de organico: " + e.getMessage());
+
+        }
+    }
+
     // Obtener el total de vidrio de TODOS los usuarios
     public int getTotalPoints() {
         try (Connection conn = DatabaseConnection.conectar();
@@ -486,34 +580,74 @@ public class Consultas {
         return 0;
     }
 
+    public int getTotalPaper() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(paper) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de papel: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public int getTotalOrganic() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(organic) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de organico: " + e.getMessage());
+        }
+        return 0;
+    }
+
     // Consulta del top 10 usarios con mas puntos
     // "1% yo alias CONTENRICO y 99% IA alias Gemini"
     public static String[][] getTopTenUsers() {
         // Creamos una matriz de 10 filas por 2 columnas (Nombre y Puntos)
-        String[][] top10 = new String[10][2]; 
+        String[][] top10 = new String[10][2];
 
         try (Connection conn = DatabaseConnection.conectar();
-            Statement stmt = conn.createStatement()) {
+                Statement stmt = conn.createStatement()) {
 
             if (conn != null) {
                 String query = "SELECT user_Name, points FROM users ORDER BY points DESC LIMIT 10";
                 ResultSet rs = stmt.executeQuery(query);
 
                 int index = 0;
-                // CAMBIO 5: Eliminé los System.out.println. 
+                // CAMBIO 5: Eliminé los System.out.println.
                 // Ahora guardamos los valores directo en nuestra matriz 'top10'
                 while (rs.next() && index < 10) {
-                    top10[index][0] = rs.getString("user_Name"); 
-                    top10[index][1] = String.valueOf(rs.getInt("points")); 
+                    top10[index][0] = rs.getString("user_Name");
+                    top10[index][1] = String.valueOf(rs.getInt("points"));
                     index++;
                 }
             }
         } catch (Exception e) {
             System.out.println("Error al consultar el top 10: " + e.getMessage());
         }
-        
+
         // CAMBIO 6: Regresamos la información para que el constructor la use
-        return top10; 
+        return top10;
     }
 
 }

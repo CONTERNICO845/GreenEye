@@ -247,7 +247,7 @@ public class Login extends JFrame {
                 // Agregamos un valor aleatrio y lo convertimos a String para que sea mas facil
                 // su uso en las imagenes
                 Random rand = new Random();
-                int randomValue = rand.nextInt(6);
+                int randomValue = rand.nextInt(5);
                 String randomString = String.valueOf(randomValue);
 
                 Consultas consultas = new Consultas();
