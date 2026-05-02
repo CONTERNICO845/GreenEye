@@ -89,6 +89,11 @@ public class Configuracion extends JPanel implements ActionListener {
             this.revalidate();
             this.repaint();
 
+            Container ancestor = SwingUtilities.getAncestorOfClass(PanelBase.class, this);
+            if (ancestor instanceof PanelBase) {
+                ((PanelBase) ancestor).darkMode(); 
+            }
+
            
         } else if (e.getSource() == btnOpcion3) {
             System.out.println("Eliminando cuenta... ¡Cuidado!");

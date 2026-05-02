@@ -177,7 +177,7 @@ abstract class PanelBase extends JPanel {
 
         switch (screenName){
             case "Inicio":
-
+                newScreen = new JPanel();
                 break;
             case "Estadisticas":
                 newScreen = new Statistics();
@@ -186,8 +186,10 @@ abstract class PanelBase extends JPanel {
                 newScreen = new Rewards();
                 break;
             case "Mapa":
+                newScreen = new JPanel();
                 break;
             case "Cuenta":
+                newScreen = new JPanel();
                 break;
             case "Configuracion":
                 newScreen = new Configuracion();
@@ -205,5 +207,36 @@ abstract class PanelBase extends JPanel {
 
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    //Modo oscuro
+    public void darkMode() {
+        if (Configuracion.esModoObscuro == false) {
+            mainPanel.setBackground(Color.WHITE);
+            topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+        } else if (Configuracion.esModoObscuro == true) {
+            mainPanel.setBackground(AppColors.COLOR_BLACK);
+            topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+        }
+
+        Component[] sidebarComponents = sidePanel.getComponents();
+        for (int i = 0; i < sidebarComponents.length; i++) {
+            if (sidebarComponents[i] instanceof JButton boton) {
+                if (i != 0 && !boton.getText().isEmpty()) {
+                    if (Configuracion.esModoObscuro == false) {
+                        boton.setBackground(AppColors.COLOR_MAIN_BUTTONS);
+                        boton.setForeground(Color.WHITE);
+                    } else if (Configuracion.esModoObscuro == true) {
+                        boton.setBackground(AppColors.COLOR_GREEN_CLARO);
+                        boton.setForeground(AppColors.COLOR_BLACK);
+                    }
+                }
+            }
+        }
+        
+        this.revalidate();
+        this.repaint();
     }
 }
