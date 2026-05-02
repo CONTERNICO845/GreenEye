@@ -63,14 +63,16 @@ abstract class PanelBase extends JPanel {
         topPanel.add(title, BorderLayout.CENTER);
 
         //Configura el boton a la derecha del perfil
-        //idImageFoto = llamar a la base de datos           al rato queda
-        //String imageRoute = "Imagenes/FOTOS_DE_PERFIL/" + idImage + ".png";
+        String idImage = Consultas.getPhoto();
+        String imageRoute = "Imagenes/FOTOS_DE_PERFIL/" + idImage + ".png";
         perfilButton = new JButton();
         perfilButton.setOpaque(false);
         perfilButton.setContentAreaFilled(false);
         perfilButton.setBorderPainted(false);
         perfilButton.setPreferredSize(new Dimension(60, 50));
-        //Aqui debe de ir la ruta de la imagen
+        ImageIcon userIcon = new ImageIcon(imageRoute);
+        Image img = userIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        perfilButton.setIcon(new ImageIcon(img));
         topPanel.add(perfilButton, BorderLayout.EAST);
 
         //Configura le panel lateral con las opciones

@@ -278,7 +278,7 @@ public class Consultas {
     }
 
     // Consulta el numero de foto del usuario actual
-    public String getPhoto() {
+    public static String getPhoto() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
