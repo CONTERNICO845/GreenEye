@@ -94,7 +94,7 @@ public class Configuracion extends JPanel implements ActionListener {
                 ((PanelBase) ancestor).darkMode(); 
             }
 
-           
+        
         } else if (e.getSource() == btnOpcion3) {
             System.out.println("Eliminando cuenta... ¡Cuidado!");
         }

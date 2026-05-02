@@ -9,7 +9,7 @@ import javax.swing.*;
 abstract class PayChartPanel extends JPanel {
 
     //Constantes
-    public static final String[] names = {"Organica", "Inorganica", "Papel", "Dificil reciclaje"};
+    public static final String[] names = {"Organica", "Plastico", "Papel", "Metal", "Vidrio","Dificil reciclaje"};
 
     //Variable para los valores de cada parte
     public double[] values;
@@ -24,7 +24,6 @@ abstract class PayChartPanel extends JPanel {
         this.colors = colors;
 
         this.setPreferredSize(new Dimension(550, 500));
-        this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
 
         //ActionPerformed para la animacion 
         timer = new Timer(20, new ActionListener() {
@@ -44,6 +43,7 @@ abstract class PayChartPanel extends JPanel {
         
         // Arrancamos la animación
         timer.start();
+        darkMode();
     }
 
     @Override
@@ -85,16 +85,28 @@ abstract class PayChartPanel extends JPanel {
             currentValue += values[i];
         }
     }
+
+    public void darkMode(){
+        if(Configuracion.esModoObscuro == false){
+            this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+        } else if(Configuracion.esModoObscuro == true){
+            this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+        }
+    }
 }
 
 abstract class PayChartInfo extends JPanel {
 
     int squareSize = 30;
+    JLabel[] info;
+    JPanel[] square;
 
     public PayChartInfo(double[] values, Color[] colors) {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+
+        info = new JLabel[PayChartPanel.names.length];
+        square = new JPanel[PayChartPanel.names.length];
 
         for (int i = 0; i < PayChartPanel.names.length; i++) {
 
@@ -104,19 +116,40 @@ abstract class PayChartInfo extends JPanel {
             line.setOpaque(false);
 
             //Para el cuadrado de color
-            JPanel square = new JPanel();
-            square.setPreferredSize(new Dimension(squareSize, squareSize));
-            square.setBackground(MyPay.colors[i]);
+            JPanel sq = new JPanel();
+            sq.setPreferredSize(new Dimension(squareSize, squareSize));
+            sq.setBackground(MyPay.colors[i]);
+
+            this.square[i] = sq;
 
             //Para el resto de la label
-            JLabel info = new JLabel(MyPay.names[i] + "    "+ values[i]);
-            info.setFont(new Font("SansSerif", Font.BOLD, 26));
+            JLabel inf = new JLabel(MyPay.names[i] + "    "+ values[i]);
+            inf.setFont(new Font("SansSerif", Font.BOLD, 26));
 
-            line.add(square);
-            line.add(info);
+            this.info[i] = inf;
+
+            line.add(sq);
+            line.add(inf);
 
             this.add(line);
             line.setVisible(true);
+
+        }
+        darkMode();
+    }
+
+    public void darkMode(){
+        if(Configuracion.esModoObscuro == false){
+            this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+            for(int i = 0; i < info.length; i++){
+                square[i].setBorder(BorderFactory.createLineBorder(AppColors.COLOR_BLACK, 2));
+            }
+        } else if(Configuracion.esModoObscuro == true){
+            this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+            for(int i = 0; i < info.length; i++){
+                square[i].setBorder(BorderFactory.createLineBorder(AppColors.COLOR_WHITE, 2));
+                info[i].setForeground(AppColors.COLOR_DARK_BLUE);
+            }
         }
     }
 }
@@ -124,17 +157,15 @@ abstract class PayChartInfo extends JPanel {
 abstract class Podium extends JPanel{
 
     public static final int peopleAmount = 10;
+    JPanel podium;
 
     public Podium() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
         this.add(Box.createVerticalStrut(100));
 
-        JPanel podium = new JPanel();
+        podium = new JPanel();
         podium.setLayout(new BoxLayout(podium, BoxLayout.Y_AXIS));
         podium.setMaximumSize(new Dimension(400, 515));
-        podium.setBackground(AppColors.COLOR_MAIN_BUTTONS);
-        podium.setBorder(BorderFactory.createLineBorder(AppColors.COLOR_WHITE, 5));
 
         //Llamamos al método que ahora nos devuelve los datos organizados
         String[][] topUsuarios = Consultas.getTopTenUsers();
@@ -171,5 +202,19 @@ abstract class Podium extends JPanel{
         }
 
         this.add(podium);
+
+        darkMode();
+    }
+
+    public void darkMode(){
+        if(Configuracion.esModoObscuro == false){
+            this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+            podium.setBackground(AppColors.COLOR_MAIN_BUTTONS);
+            podium.setBorder(BorderFactory.createLineBorder(AppColors.COLOR_WHITE, 5));
+        } else if(Configuracion.esModoObscuro == true){
+            this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+            podium.setBackground(AppColors.COLOR_DARK_PANEL);
+            podium.setBorder(BorderFactory.createLineBorder(AppColors.COLOR_DARK_BLUE, 5));
+        }
     }
 }

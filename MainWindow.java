@@ -14,7 +14,8 @@ public class MainWindow {
     public static void main(String[] args) {
         JFrame window = new JFrame("Main window");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        window.getContentPane().setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+        
         MyPanel content = new MyPanel("Inicio");
         window.add(content);
 

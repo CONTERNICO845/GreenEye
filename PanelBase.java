@@ -65,10 +65,11 @@ abstract class PanelBase extends JPanel {
         //Configura el boton a la derecha del perfil
         String idImage = Consultas.getPhoto();
         String imageRoute = "Imagenes/FOTOS_DE_PERFIL/" + idImage + ".png";
-        perfilButton = new JButton();
+        perfilButton = new JButton("");
         perfilButton.setOpaque(false);
         perfilButton.setContentAreaFilled(false);
         perfilButton.setBorderPainted(false);
+        perfilButton.setFocusPainted(false);
         perfilButton.setPreferredSize(new Dimension(60, 50));
         ImageIcon userIcon = new ImageIcon(imageRoute);
         Image img = userIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -173,36 +174,20 @@ abstract class PanelBase extends JPanel {
 
     //Metodo que cambia entre ventanas en el panel principal
     private void choosePanel(String screenName) {
-        
+
         mainPanel.removeAll();
         JPanel newScreen = null;
 
-        switch (screenName){
-            case "Inicio":
-                newScreen = new JPanel();
-                break;
-            case "Estadisticas":
-                newScreen = new Statistics();
-                break;
-            case "Rewards":
-                newScreen = new Rewards();
-                break;
-            case "Mapa":
-                newScreen = new JPanel();
-                break;
-            case "Cuenta":
-                newScreen = new JPanel();
-                break;
-            case "Configuracion":
-                newScreen = new Configuracion();
-                break;
-            case "About Us":
-                newScreen = new About_Us();
-                break;
-            default:
-                newScreen = new JPanel();
-                break;
-        }
+        newScreen = switch (screenName) {
+            case "Inicio" -> new JPanel();
+            case "Estadisticas" -> new Statistics();
+            case "Rewards" -> new Rewards();
+            case "Mapa" -> new JPanel();
+            case "Cuenta" -> new JPanel();
+            case "Configuracion" -> new Configuracion();
+            case "About Us" -> new About_Us();
+            default -> new JPanel();
+        };
 
         mainPanel.add(newScreen, BorderLayout.CENTER);
         title.setText(screenName);
@@ -219,8 +204,8 @@ abstract class PanelBase extends JPanel {
             sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
         } else if (Configuracion.esModoObscuro == true) {
             mainPanel.setBackground(AppColors.COLOR_BLACK);
-            topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
-            sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            topPanel.setBackground(AppColors.COLOR_DARK_PANEL);
+            sidePanel.setBackground(AppColors.COLOR_DARK_PANEL);
         }
 
         Component[] sidebarComponents = sidePanel.getComponents();
@@ -231,13 +216,13 @@ abstract class PanelBase extends JPanel {
                         boton.setBackground(AppColors.COLOR_MAIN_BUTTONS);
                         boton.setForeground(Color.WHITE);
                     } else if (Configuracion.esModoObscuro == true) {
-                        boton.setBackground(AppColors.COLOR_GREEN_CLARO);
-                        boton.setForeground(AppColors.COLOR_BLACK);
+                        boton.setBackground(AppColors.COLOR_DARK_BUTTONS);
+                        boton.setForeground(AppColors.COLOR_DARK_BLUE);
                     }
                 }
             }
         }
-        
+
         this.revalidate();
         this.repaint();
     }
