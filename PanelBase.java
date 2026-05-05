@@ -41,9 +41,7 @@ abstract class PanelBase extends JPanel {
         this.add(mainPanel, BorderLayout.CENTER);
         if (Configuracion.esModoObscuro == false) {
             mainPanel.setBackground(Color.WHITE);
-        } else if (Configuracion.esModoObscuro == true) {
-            //Aun nada
-        }
+        } 
 
         //Configura el panel superior del titulo y perfil
         topPanel = new JPanel();
@@ -51,8 +49,6 @@ abstract class PanelBase extends JPanel {
         this.add(topPanel, BorderLayout.NORTH);
         if (Configuracion.esModoObscuro == false) {
             topPanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
-        } else if (Configuracion.esModoObscuro == true) {
-            //Aun nada
         }
 
         //Configura un titulo para todas las ventanas
@@ -83,8 +79,6 @@ abstract class PanelBase extends JPanel {
         this.add(sidePanel, BorderLayout.WEST);
         if (Configuracion.esModoObscuro == false) {
             sidePanel.setBackground(AppColors.COLOR_DARK_BACKGROUND);
-        } else if (Configuracion.esModoObscuro == true) {
-            //Aun no hay color
         }
 
         //Configura los botones del panel lateral
@@ -116,8 +110,6 @@ abstract class PanelBase extends JPanel {
                 if (Configuracion.esModoObscuro == false) {
                     boton.setBackground(AppColors.COLOR_MAIN_BUTTONS);
                     boton.setForeground(Color.WHITE);
-                } else if (Configuracion.esModoObscuro == true) {
-                    //Aun no tenemos colores
                 }
 
                 //Tamaño de los botones
