@@ -183,7 +183,7 @@ abstract class PanelBase extends JPanel {
             case "Estadisticas" -> new Statistics();
             case "Rewards" -> new Rewards();
             case "Mapa" -> new JPanel();
-            case "Cuenta" -> new JPanel();
+            case "Cuenta" -> new cuenta();
             case "Configuracion" -> new Configuracion();
             case "About Us" -> new About_Us();
             default -> new JPanel();
