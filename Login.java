@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.util.Random;
 import javax.swing.*;
@@ -165,6 +166,7 @@ public class Login extends JFrame {
 
     // --- VISTA DE REGISTRO ---
     class VistaRegistro extends JPanel {
+
         public VistaRegistro() {
             setBackground(COLOR_DERECHO);
             setLayout(new GridBagLayout());
@@ -237,8 +239,8 @@ public class Login extends JFrame {
                 }
 
                 // Verifica que el campo sean valido de contaseña
-                if (pass.isEmpty() ||
-                 pass.length() < 8) {
+                if (pass.isEmpty()
+                        || pass.length() < 8) {
                     JOptionPane.showMessageDialog(Login.this, "Su contraseña es inválida", "Aviso",
                             JOptionPane.WARNING_MESSAGE);
                     return;
