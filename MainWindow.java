@@ -8,7 +8,8 @@ class MyPanel extends PanelBase {
     }
 }
 
-//Aqui inicializa todo
+//Aqui inicializa todo el programa
+//Falta inicializar el server de python (Creo)
 public class MainWindow {
 
     public static void main(String[] args) {
