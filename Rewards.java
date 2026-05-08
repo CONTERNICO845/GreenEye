@@ -4,14 +4,13 @@ import javax.swing.*;
 
 public class Rewards extends JPanel implements ActionListener {
 
-    // Constantes para los valores de puntos y créditos
     private static final int PUNTOS_AGREGAR = 50;
     private static final int PUNTOS_CANJEAR = 30;
-
+    private static final int PUNTOS_CANJEARAM = 60;
+    private static final int PUNTOS_CANJEARVERD = 90;
     private static final int CREDITOS_VERDE = 10;
-
-    // Constante para el tamaño de la imagen en los botones
     private static final int TAMANO_IMAGEN = 250;
+
     private int puntos;
     private int nivel;
     private int creditosSiiau;
@@ -19,6 +18,9 @@ public class Rewards extends JPanel implements ActionListener {
     private JLabel labelEstado;
     private JButton btnAgregar;
     private JButton btnRojo, btnAmarillo, btnVerde;
+
+    // 👉 Guardamos referencia al panel central
+    private JPanel panelCuadros;
 
     public Rewards() {
         puntos = 0;
@@ -37,13 +39,16 @@ public class Rewards extends JPanel implements ActionListener {
         add(btnAgregar, BorderLayout.SOUTH);
 
         // Panel central con los tres cuadros
-        JPanel panelCuadros = new JPanel(new GridLayout(1, 3, 20, 0));
-        panelCuadros.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-        
-        btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/fiesta-salchichas_2.jpg");
+        btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/fiesta-salchichas_2.jpg"); 
+        btnRojo.setPreferredSize(new Dimension(300, 300));
+
         btnAmarillo = crearBoton("Canjear", Color.YELLOW, "imagenes/botorewards/Sukumbia.jpg");
+        btnAmarillo.setPreferredSize(new Dimension(300, 300));
+
         btnVerde = crearBoton("Canjear", Color.GREEN, "imagenes/botorewards/Dormir.jpg");
+        btnVerde.setPreferredSize(new Dimension(300, 300));
 
         panelCuadros.add(btnRojo);
         panelCuadros.add(btnAmarillo);
@@ -52,6 +57,9 @@ public class Rewards extends JPanel implements ActionListener {
         add(panelCuadros, BorderLayout.CENTER);
 
         setSize(500, 300);
+
+        // Aplica colores iniciales
+        DarkMode();
     }
 
     private JButton crearBoton(String texto, Color color, String rutaImagen) {
@@ -59,11 +67,8 @@ public class Rewards extends JPanel implements ActionListener {
 
         if (rutaImagen != null) {
             ImageIcon icono = new ImageIcon(rutaImagen);
-            // Escalar la imagen al tamaño definido en la constante
             Image img = icono.getImage().getScaledInstance(TAMANO_IMAGEN, TAMANO_IMAGEN, Image.SCALE_SMOOTH);
             boton.setIcon(new ImageIcon(img));
-
-            // Texto debajo de la imagen
             boton.setHorizontalTextPosition(SwingConstants.CENTER);
             boton.setVerticalTextPosition(SwingConstants.BOTTOM);
         }
@@ -100,29 +105,52 @@ public class Rewards extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEAR - puntos) + " puntos para canjear.");
             }
         } else if (e.getSource() == btnAmarillo) {
-            if (puntos >= PUNTOS_CANJEAR) {
-                puntos -= PUNTOS_CANJEAR;
+            if (puntos >= PUNTOS_CANJEARAM) {
+                puntos -= PUNTOS_CANJEARAM;
                 JOptionPane.showMessageDialog(this, "Te ganaste dos hamburguesas");
             } else {
-                JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEAR - puntos) + " puntos para canjear.");
+                JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARAM - puntos) + " puntos para canjear.");
             }
         } else if (e.getSource() == btnVerde) {
-            if (puntos >= PUNTOS_CANJEAR) {
-                puntos -= PUNTOS_CANJEAR;
+            if (puntos >= PUNTOS_CANJEARVERD) {
+                puntos -= PUNTOS_CANJEARVERD;
                 creditosSiiau += CREDITOS_VERDE;
                 JOptionPane.showMessageDialog(this, "Canjeaste en el botón verde. Recibiste " + CREDITOS_VERDE + " créditos.");
             } else {
-                JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEAR - puntos) + " puntos para canjear.");
+                JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARVERD - puntos) + " puntos para canjear.");
             }
         }
         actualizarEstado();
     }
 
-    // Método main para probar la interfaz
+    // 👉 Método DarkMode que cambia el área central
+    public void DarkMode() {
+    if (!Configuracion.esModoObscuro) {
+        this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+        panelCuadros.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+
+        // Texto en negro para modo claro
+        labelEstado.setForeground(AppColors.COLOR_BLACK);
+    } else {
+        this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+        panelCuadros.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+
+        // Texto en blanco para modo oscuro
+        labelEstado.setForeground(AppColors.COLOR_WHITE);
+    }
+
+    this.revalidate();
+    this.repaint();
+}
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Rewards");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new Rewards());
+        Rewards rewardsPanel = new Rewards();
+        frame.add(rewardsPanel);
         frame.setVisible(true);
+
+        // Aplica modo según Configuracion
+        rewardsPanel.DarkMode();
     }
 }
