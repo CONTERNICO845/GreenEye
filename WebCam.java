@@ -18,7 +18,7 @@ public class WebCam extends JFrame {
 
     public WebCam() {
         setTitle("Clasificador de Basura");
-        setSize(1920, 1080); // Ajusté un poco el ancho para los botones
+        setSize(1920, 1080); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
@@ -56,30 +56,44 @@ public class WebCam extends JFrame {
         panelFoto.setOpaque(false);
 
         // --- 2. PANEL DE BOTONES (Horizontal) ---
-        // FlowLayout.CENTER pone los elementos uno al lado del otro
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelBotones.setOpaque(false);
 
         JButton btnCamara = new JButton("Usar Cámara");
+        JButton btnScan = new JButton("Escanear"); // Botón nuevo
         JButton btnArchivo = new JButton("Subir Archivo");
 
-        // Tamaño uniforme para que se vean simétricos
+        // Tamaño uniforme para los tres botones
         Dimension dimBoton = new Dimension(160, 40);
         btnCamara.setPreferredSize(dimBoton);
+        btnScan.setPreferredSize(dimBoton);
         btnArchivo.setPreferredSize(dimBoton);
 
+        // Agregamos en el orden solicitado: Cámara - Escanear - Archivo
         panelBotones.add(btnCamara);
+        panelBotones.add(btnScan);
         panelBotones.add(btnArchivo);
 
         // --- 3. EVENTOS ---
         btnCamara.addActionListener(e -> abrirCamara());
+        btnScan.addActionListener(e -> escanearImagen()); // Acción para escanear
         btnArchivo.addActionListener(e -> cargarArchivo());
 
         // --- 4. ENSAMBLAJE ---
         add(Box.createVerticalStrut(30)); 
         add(panelFoto);
         add(Box.createVerticalStrut(20)); 
-        add(panelBotones); // Aquí se agregan los botones horizontales
+        add(panelBotones); 
+    }
+
+    private void escanearImagen() {
+        if (imagenActual == null) {
+            JOptionPane.showMessageDialog(this, "Primero captura o sube una imagen para escanear.");
+            return;
+        }
+        // Aquí puedes agregar la lógica de clasificación
+        System.out.println("Escaneando imagen...");
+        JOptionPane.showMessageDialog(this, "Iniciando proceso de escaneo...");
     }
 
     private void abrirCamara() {
