@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+1
 public class ExampleHowToUseConsulta {
 /*
 Codigo generado POR IA para consultas 
