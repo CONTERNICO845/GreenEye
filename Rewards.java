@@ -6,9 +6,9 @@ public class Rewards extends JPanel implements ActionListener {
 
     private static final int PUNTOS_AGREGAR = 50;
     private static final int PUNTOS_CANJEAR = 30;
-    private static final int PUNTOS_CANJEARAM = 60;
-    private static final int PUNTOS_CANJEARVERD = 90;
-    private static final int CREDITOS_VERDE = 10;
+    private static final int PUNTOS_CANJEARAM = 100;
+    private static final int PUNTOS_CANJEARVERD = 200;
+    private static final int CREDITOS_VERDE = 1;
     private static final int TAMANO_IMAGEN = 250;
 
     private int puntos;
@@ -41,13 +41,13 @@ public class Rewards extends JPanel implements ActionListener {
         // Panel central con los tres cuadros
         panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-        btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/fiesta-salchichas_2.jpg"); 
+        btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
         btnRojo.setPreferredSize(new Dimension(300, 300));
 
-        btnAmarillo = crearBoton("Canjear", Color.YELLOW, "imagenes/botorewards/Sukumbia.jpg");
+        btnAmarillo = crearBoton("Canjear", Color.YELLOW, "imagenes/botorewards/Hotdog.jpg");
         btnAmarillo.setPreferredSize(new Dimension(300, 300));
 
-        btnVerde = crearBoton("Canjear", Color.GREEN, "imagenes/botorewards/Dormir.jpg");
+        btnVerde = crearBoton("Canjear", Color.GREEN, "imagenes/botorewards/Combo.png");
         btnVerde.setPreferredSize(new Dimension(300, 300));
 
         panelCuadros.add(btnRojo);
@@ -100,14 +100,14 @@ public class Rewards extends JPanel implements ActionListener {
         } else if (e.getSource() == btnRojo) {
             if (puntos >= PUNTOS_CANJEAR) {
                 puntos -= PUNTOS_CANJEAR;
-                JOptionPane.showMessageDialog(this, "Hot dog con salchicha doble (♥ω♥*) ");
+                JOptionPane.showMessageDialog(this, "Canjeaste un agua fresca mediana");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEAR - puntos) + " puntos para canjear.");
             }
         } else if (e.getSource() == btnAmarillo) {
             if (puntos >= PUNTOS_CANJEARAM) {
                 puntos -= PUNTOS_CANJEARAM;
-                JOptionPane.showMessageDialog(this, "Te ganaste dos hamburguesas");
+                JOptionPane.showMessageDialog(this, "Canjeaste un hot dog mediano");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARAM - puntos) + " puntos para canjear.");
             }
@@ -115,7 +115,7 @@ public class Rewards extends JPanel implements ActionListener {
             if (puntos >= PUNTOS_CANJEARVERD) {
                 puntos -= PUNTOS_CANJEARVERD;
                 creditosSiiau += CREDITOS_VERDE;
-                JOptionPane.showMessageDialog(this, "Canjeaste en el botón verde. Recibiste " + CREDITOS_VERDE + " créditos.");
+                JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog junto a " + CREDITOS_VERDE + " crédito en siiau.");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARVERD - puntos) + " puntos para canjear.");
             }
