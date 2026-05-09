@@ -1,13 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.time.LocalDate;
 
 public class Rewards extends JPanel implements ActionListener {
 
-    private static final int PUNTOS_AGREGAR = 50;
-    private static final int PUNTOS_CANJEAR = 30;
-    private static final int PUNTOS_CANJEARAM = 100;
-    private static final int PUNTOS_CANJEARVERD = 200;
+    private static final int PUNTOS_CANJEAR = 0;
+    private static final int PUNTOS_CANJEARAM = 0;
+    private static final int PUNTOS_CANJEARVERD = 0;
     private static final int CREDITOS_VERDE = 1;
     private static final int TAMANO_IMAGEN = 250;
 
@@ -16,11 +16,11 @@ public class Rewards extends JPanel implements ActionListener {
     private int creditosSiiau;
 
     private JLabel labelEstado;
-    private JButton btnAgregar;
     private JButton btnRojo, btnAmarillo, btnVerde;
 
-    // 👉 Guardamos referencia al panel central
     private JPanel panelCuadros;
+    private JPanel panelTicket;   // 👉 Panel con borde para ticket
+    private JLabel lblCodigo, lblFecha, lblCaducidad, lblRecompensa;
 
     public Rewards() {
         puntos = 0;
@@ -32,11 +32,6 @@ public class Rewards extends JPanel implements ActionListener {
         // Estado arriba
         labelEstado = new JLabel("Puntos: " + puntos + " | Nivel: " + nivel + " | Créditos SIIAU: " + creditosSiiau, SwingConstants.CENTER);
         add(labelEstado, BorderLayout.NORTH);
-
-        // Botón para agregar puntos
-        btnAgregar = new JButton("Agregar " + PUNTOS_AGREGAR + " puntos");
-        btnAgregar.addActionListener(this);
-        add(btnAgregar, BorderLayout.SOUTH);
 
         // Panel central con los tres cuadros
         panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
@@ -56,9 +51,26 @@ public class Rewards extends JPanel implements ActionListener {
 
         add(panelCuadros, BorderLayout.CENTER);
 
-        setSize(500, 300);
+        // 👉 Panel Ticket con borde (parte izquierda)
+        panelTicket = new JPanel(new GridLayout(4,1));
+        panelTicket.setBorder(BorderFactory.createTitledBorder("Ticket de Canje"));
+        lblCodigo = new JLabel("Código: ---", SwingConstants.CENTER);
+        lblFecha = new JLabel("Fecha: ---", SwingConstants.CENTER);
+        lblCaducidad = new JLabel("Caducidad: ---", SwingConstants.CENTER);
+        lblRecompensa = new JLabel("Recompensa: ---", SwingConstants.CENTER);
 
-        // Aplica colores iniciales
+        panelTicket.add(lblCodigo);
+        panelTicket.add(lblFecha);
+        panelTicket.add(lblCaducidad);
+        panelTicket.add(lblRecompensa);
+
+        // Inicialmente oculto
+        panelTicket.setVisible(false);
+
+        add(panelTicket, BorderLayout.WEST);
+
+        setSize(700, 400);
+
         DarkMode();
     }
 
@@ -92,15 +104,27 @@ public class Rewards extends JPanel implements ActionListener {
         labelEstado.setText("Puntos: " + puntos + " | Nivel: " + nivel + " | Créditos SIIAU: " + creditosSiiau);
     }
 
+    // 👉 Genera ticket con código, fecha, caducidad y recompensa
+    private void generarTicket(String recompensa) {
+        String codigo = "TK-" + (int)(Math.random() * 900000 + 100000);
+        LocalDate hoy = LocalDate.now();
+        LocalDate caducidad = hoy.plusDays(7);
+
+        lblCodigo.setText("Código: " + codigo);
+        lblFecha.setText("Fecha: " + hoy);
+        lblCaducidad.setText("Caducidad: " + caducidad);
+        lblRecompensa.setText("Recompensa: " + recompensa);
+
+        panelTicket.setVisible(true);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnAgregar) {
-            puntos += PUNTOS_AGREGAR;
-            verificarNivel();
-        } else if (e.getSource() == btnRojo) {
+        if (e.getSource() == btnRojo) {
             if (puntos >= PUNTOS_CANJEAR) {
                 puntos -= PUNTOS_CANJEAR;
                 JOptionPane.showMessageDialog(this, "Canjeaste un agua fresca mediana");
+                generarTicket("Agua fresca mediana");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEAR - puntos) + " puntos para canjear.");
             }
@@ -108,6 +132,7 @@ public class Rewards extends JPanel implements ActionListener {
             if (puntos >= PUNTOS_CANJEARAM) {
                 puntos -= PUNTOS_CANJEARAM;
                 JOptionPane.showMessageDialog(this, "Canjeaste un hot dog mediano");
+                generarTicket("Hot dog mediano");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARAM - puntos) + " puntos para canjear.");
             }
@@ -116,32 +141,45 @@ public class Rewards extends JPanel implements ActionListener {
                 puntos -= PUNTOS_CANJEARVERD;
                 creditosSiiau += CREDITOS_VERDE;
                 JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog junto a " + CREDITOS_VERDE + " crédito en siiau.");
+                generarTicket("Combo big Agua fresca + Hotdog");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARVERD - puntos) + " puntos para canjear.");
             }
         }
+        verificarNivel();
         actualizarEstado();
     }
 
-    // 👉 Método DarkMode que cambia el área central
     public void DarkMode() {
-    if (!Configuracion.esModoObscuro) {
-        this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
-        panelCuadros.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+        if (!Configuracion.esModoObscuro) {
+            this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+            panelCuadros.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
+            panelTicket.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
 
-        // Texto en negro para modo claro
-        labelEstado.setForeground(AppColors.COLOR_BLACK);
-    } else {
-        this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
-        panelCuadros.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+            labelEstado.setForeground(AppColors.COLOR_BLACK);
+            lblCodigo.setForeground(AppColors.COLOR_BLACK);
+            lblFecha.setForeground(AppColors.COLOR_BLACK);
+            lblCaducidad.setForeground(AppColors.COLOR_BLACK);
+            lblRecompensa.setForeground(AppColors.COLOR_BLACK);
 
-        // Texto en blanco para modo oscuro
-        labelEstado.setForeground(AppColors.COLOR_WHITE);
+            ((javax.swing.border.TitledBorder) panelTicket.getBorder()).setTitleColor(AppColors.COLOR_BLACK);
+
+        } else {
+            this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+            panelCuadros.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+            panelTicket.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+
+            labelEstado.setForeground(AppColors.COLOR_WHITE);
+            lblCodigo.setForeground(AppColors.COLOR_WHITE);
+            lblFecha.setForeground(AppColors.COLOR_WHITE);
+            lblCaducidad.setForeground(AppColors.COLOR_WHITE);
+            lblRecompensa.setForeground(AppColors.COLOR_WHITE);
+
+            ((javax.swing.border.TitledBorder) panelTicket.getBorder()).setTitleColor(AppColors.COLOR_WHITE);
+        }
+        this.revalidate();
+        this.repaint();
     }
-
-    this.revalidate();
-    this.repaint();
-}
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Rewards");
@@ -149,8 +187,6 @@ public class Rewards extends JPanel implements ActionListener {
         Rewards rewardsPanel = new Rewards();
         frame.add(rewardsPanel);
         frame.setVisible(true);
-
-        // Aplica modo según Configuracion
         rewardsPanel.DarkMode();
     }
 }
