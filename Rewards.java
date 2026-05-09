@@ -19,21 +19,22 @@ public class Rewards extends JPanel implements ActionListener {
     private JButton btnRojo, btnAmarillo, btnVerde;
 
     private JPanel panelCuadros;
-    private JPanel panelTicket;   // 👉 Panel con borde para ticket
+    private JPanel panelTicket;
     private JLabel lblCodigo, lblFecha, lblCaducidad, lblRecompensa;
 
+    private Consultas consultas; // CAMBIO: instancia de Consultas
+
     public Rewards() {
-        puntos = 0;
+        consultas = new Consultas();   // CAMBIO: inicializar objeto
+        puntos = consultas.getPoints(); // CAMBIO: obtener puntos desde DB
         nivel = 1;
         creditosSiiau = 0;
 
         setLayout(new BorderLayout());
 
-        // Estado arriba
         labelEstado = new JLabel("Puntos: " + puntos + " | Nivel: " + nivel + " | Créditos SIIAU: " + creditosSiiau, SwingConstants.CENTER);
         add(labelEstado, BorderLayout.NORTH);
 
-        // Panel central con los tres cuadros
         panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
         btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
@@ -51,7 +52,6 @@ public class Rewards extends JPanel implements ActionListener {
 
         add(panelCuadros, BorderLayout.CENTER);
 
-        // 👉 Panel Ticket con borde (parte izquierda)
         panelTicket = new JPanel(new GridLayout(4,1));
         panelTicket.setBorder(BorderFactory.createTitledBorder("Ticket de Canje"));
         lblCodigo = new JLabel("Código: ---", SwingConstants.CENTER);
@@ -64,19 +64,15 @@ public class Rewards extends JPanel implements ActionListener {
         panelTicket.add(lblCaducidad);
         panelTicket.add(lblRecompensa);
 
-        // Inicialmente oculto
         panelTicket.setVisible(false);
-
         add(panelTicket, BorderLayout.WEST);
 
         setSize(700, 400);
-
-        DarkMode();
+        DarkMode(); // ✅ mantener tu método de colores
     }
 
     private JButton crearBoton(String texto, Color color, String rutaImagen) {
         JButton boton = new JButton(texto);
-
         if (rutaImagen != null) {
             ImageIcon icono = new ImageIcon(rutaImagen);
             Image img = icono.getImage().getScaledInstance(TAMANO_IMAGEN, TAMANO_IMAGEN, Image.SCALE_SMOOTH);
@@ -84,7 +80,6 @@ public class Rewards extends JPanel implements ActionListener {
             boton.setHorizontalTextPosition(SwingConstants.CENTER);
             boton.setVerticalTextPosition(SwingConstants.BOTTOM);
         }
-
         boton.setBackground(color);
         boton.setOpaque(true);
         boton.setFont(new Font("Arial", Font.BOLD, 16));
@@ -104,7 +99,6 @@ public class Rewards extends JPanel implements ActionListener {
         labelEstado.setText("Puntos: " + puntos + " | Nivel: " + nivel + " | Créditos SIIAU: " + creditosSiiau);
     }
 
-    // 👉 Genera ticket con código, fecha, caducidad y recompensa
     private void generarTicket(String recompensa) {
         String codigo = "TK-" + (int)(Math.random() * 900000 + 100000);
         LocalDate hoy = LocalDate.now();
@@ -122,7 +116,8 @@ public class Rewards extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnRojo) {
             if (puntos >= PUNTOS_CANJEAR) {
-                puntos -= PUNTOS_CANJEAR;
+                consultas.updatePoints(-PUNTOS_CANJEAR); // CAMBIO: actualizar en DB
+                puntos = consultas.getPoints();          // CAMBIO: refrescar
                 JOptionPane.showMessageDialog(this, "Canjeaste un agua fresca mediana");
                 generarTicket("Agua fresca mediana");
             } else {
@@ -130,7 +125,8 @@ public class Rewards extends JPanel implements ActionListener {
             }
         } else if (e.getSource() == btnAmarillo) {
             if (puntos >= PUNTOS_CANJEARAM) {
-                puntos -= PUNTOS_CANJEARAM;
+                consultas.updatePoints(-PUNTOS_CANJEARAM); // CAMBIO
+                puntos = consultas.getPoints();            // CAMBIO
                 JOptionPane.showMessageDialog(this, "Canjeaste un hot dog mediano");
                 generarTicket("Hot dog mediano");
             } else {
@@ -138,7 +134,8 @@ public class Rewards extends JPanel implements ActionListener {
             }
         } else if (e.getSource() == btnVerde) {
             if (puntos >= PUNTOS_CANJEARVERD) {
-                puntos -= PUNTOS_CANJEARVERD;
+                consultas.updatePoints(-PUNTOS_CANJEARVERD); // CAMBIO
+                puntos = consultas.getPoints();              // CAMBIO
                 creditosSiiau += CREDITOS_VERDE;
                 JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog junto a " + CREDITOS_VERDE + " crédito en siiau.");
                 generarTicket("Combo big Agua fresca + Hotdog");
@@ -189,4 +186,4 @@ public class Rewards extends JPanel implements ActionListener {
         frame.setVisible(true);
         rewardsPanel.DarkMode();
     }
-}
+}// Código hecho por 100% inteligencia humana
