@@ -35,13 +35,13 @@ public class Rewards extends JPanel implements ActionListener {
 
         panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-        btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
+        btnRojo = crearBoton("Canjear 50 puntos. AFresca (mdn)", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
         btnRojo.setPreferredSize(new Dimension(300, 300));
 
-        btnAmarillo = crearBoton("Canjear", Color.YELLOW, "imagenes/botorewards/Hotdog.jpg");
+        btnAmarillo = crearBoton("Canjear 100 puntos. HotDog (mdn)", Color.YELLOW, "imagenes/botorewards/Hotdog.jpg");
         btnAmarillo.setPreferredSize(new Dimension(300, 300));
 
-        btnVerde = crearBoton("Canjear", Color.GREEN, "imagenes/botorewards/Combo.png");
+        btnVerde = crearBoton("Canjear 200 puntos. Combo Big", Color.GREEN, "imagenes/botorewards/Combo.png");
         btnVerde.setPreferredSize(new Dimension(300, 300));
 
         panelCuadros.add(btnRojo);
