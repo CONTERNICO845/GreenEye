@@ -119,6 +119,34 @@ public class Consultas {
         return 0;
     }
 
+    // Metodo para consultar los nivel del usario
+    public int getNivel() {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT nivel FROM users WHERE id = " + loggedUserId;
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                int nivel = rs.getInt("nivel");
+                return nivel;
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al consultar los puntos: " + e.getMessage());
+
+        }
+
+        return 0;
+    }
+
     // Consulta los puntos de Vidrios
     public int getGlassPoints() {
 
@@ -231,50 +259,50 @@ public class Consultas {
 
     }
 
-    public String getPaper() {
+    public int getPaper() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
 
             if (conn == null)
-                return null;
+                return 0;
 
             String query = "SELECT paper FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
 
-                return rs.getString("paper");
+                return rs.getInt("paper");
 
             }
 
         } catch (Exception e) {
             System.out.println("Error al consultar el papel: " + e.getMessage());
         }
-        return null;
+        return 0;
     }
 
-    public String getOrganic() {
+    public int getOrganic() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
 
             if (conn == null)
-                return null;
+                return 0;
 
             String query = "SELECT organic FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
 
-                return rs.getString("organic");
+                return rs.getInt("organic");
 
             }
 
         } catch (Exception e) {
             System.out.println("Error al consultar lo organico: " + e.getMessage());
         }
-        return null;
+        return 0;
     }
 
     // Consulta el numero de foto del usuario actual
@@ -328,6 +356,25 @@ public class Consultas {
         }
 
     }
+
+    // Agregamos Niveles al usuario
+    public void setNivel(int nuevoNivel) {
+    try (Connection conn = DatabaseConnection.conectar();
+         Statement stmt = conn.createStatement()) {
+
+        if (conn == null) return;
+
+        String query = "UPDATE users SET nivel = " + nuevoNivel + " WHERE id = " + loggedUserId;
+        int rowsAffected = stmt.executeUpdate(query);
+
+        if (rowsAffected > 0) {
+            System.out.println("Nivel actualizado correctamente a: " + nuevoNivel);
+        }
+
+    } catch (Exception e) {
+        System.out.println("Error al actualizar el nivel: " + e.getMessage());
+    }
+ }
 
     // Update para Vidrio
     public void updateGlassPoints(int pointsToAdd) {
@@ -416,8 +463,7 @@ public class Consultas {
             if (rowsAffected > 0) {
 
                 int total = getHardToRecyclePoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de Difícil Reciclaje. Total: " + total);
-
+                System.out.println("Se agregaron " + pointsToAdd + " puntos... Total: " + total);
             }
 
         } catch (Exception e) {
@@ -492,6 +538,27 @@ public class Consultas {
 
         } catch (Exception e) {
             System.out.println("Error al consultar el total global de Puntos: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Obtener el total de vidrio de TODOS los usuarios
+    public int getTotalNivel() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(nivel) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de Nivel: " + e.getMessage());
         }
         return 0;
     }

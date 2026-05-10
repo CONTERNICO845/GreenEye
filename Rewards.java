@@ -5,15 +5,13 @@ import java.time.LocalDate;
 
 public class Rewards extends JPanel implements ActionListener {
 
-    private static final int PUNTOS_CANJEAR = 0;
-    private static final int PUNTOS_CANJEARAM = 0;
-    private static final int PUNTOS_CANJEARVERD = 0;
-    private static final int CREDITOS_VERDE = 1;
+    private static final int PUNTOS_CANJEAR = 50;
+    private static final int PUNTOS_CANJEARAM = 100;
+    private static final int PUNTOS_CANJEARVERD = 200;
     private static final int TAMANO_IMAGEN = 250;
 
     private int puntos;
     private int nivel;
-    private int creditosSiiau;
 
     private JLabel labelEstado;
     private JButton btnRojo, btnAmarillo, btnVerde;
@@ -27,23 +25,23 @@ public class Rewards extends JPanel implements ActionListener {
     public Rewards() {
         consultas = new Consultas();   // CAMBIO: inicializar objeto
         puntos = consultas.getPoints(); // CAMBIO: obtener puntos desde DB
-        nivel = 1;
-        creditosSiiau = 0;
+        nivel = consultas.getNivel();
+
 
         setLayout(new BorderLayout());
 
-        labelEstado = new JLabel("Puntos: " + puntos + " | Nivel: " + nivel + " | Créditos SIIAU: " + creditosSiiau, SwingConstants.CENTER);
+        labelEstado = new JLabel("Puntos: " + puntos + " | Nivel: " + nivel, SwingConstants.CENTER);
         add(labelEstado, BorderLayout.NORTH);
 
         panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-        btnRojo = crearBoton("Canjear", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
+        btnRojo = crearBoton("Canjear 50 puntos. AFresca (mdn)", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
         btnRojo.setPreferredSize(new Dimension(300, 300));
 
-        btnAmarillo = crearBoton("Canjear", Color.YELLOW, "imagenes/botorewards/Hotdog.jpg");
+        btnAmarillo = crearBoton("Canjear 100 puntos. HotDog (mdn)", Color.YELLOW, "imagenes/botorewards/Hotdog.jpg");
         btnAmarillo.setPreferredSize(new Dimension(300, 300));
 
-        btnVerde = crearBoton("Canjear", Color.GREEN, "imagenes/botorewards/Combo.png");
+        btnVerde = crearBoton("Canjear 200 puntos. Combo Big", Color.GREEN, "imagenes/botorewards/Combo.png");
         btnVerde.setPreferredSize(new Dimension(300, 300));
 
         panelCuadros.add(btnRojo);
@@ -68,7 +66,7 @@ public class Rewards extends JPanel implements ActionListener {
         add(panelTicket, BorderLayout.WEST);
 
         setSize(700, 400);
-        DarkMode(); // ✅ mantener tu método de colores
+        DarkMode(); // mantener tu método de colores
     }
 
     private JButton crearBoton(String texto, Color color, String rutaImagen) {
@@ -88,15 +86,16 @@ public class Rewards extends JPanel implements ActionListener {
     }
 
     private void verificarNivel() {
-        if (puntos >= nivel * 100) {
-            nivel++;
-            JOptionPane.showMessageDialog(this,
-                "¡Felicidades! Has alcanzado el nivel " + nivel);
-        }
+    if (puntos >= nivel * 100) {
+        nivel++;
+        consultas.setNivel(nivel); // <-- guardar en DB
+        JOptionPane.showMessageDialog(this,
+            "¡Felicidades! Has alcanzado el nivel " + nivel);
     }
+}
 
     private void actualizarEstado() {
-        labelEstado.setText("Puntos: " + puntos + " | Nivel: " + nivel + " | Créditos SIIAU: " + creditosSiiau);
+        labelEstado.setText("Puntos: " + puntos + " | Nivel: " + nivel);
     }
 
     private void generarTicket(String recompensa) {
@@ -136,8 +135,7 @@ public class Rewards extends JPanel implements ActionListener {
             if (puntos >= PUNTOS_CANJEARVERD) {
                 consultas.updatePoints(-PUNTOS_CANJEARVERD); // CAMBIO
                 puntos = consultas.getPoints();              // CAMBIO
-                creditosSiiau += CREDITOS_VERDE;
-                JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog junto a " + CREDITOS_VERDE + " crédito en siiau.");
+                JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog");
                 generarTicket("Combo big Agua fresca + Hotdog");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARVERD - puntos) + " puntos para canjear.");
