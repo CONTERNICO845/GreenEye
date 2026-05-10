@@ -46,6 +46,7 @@ public class GeneradorDePruebas {
                 String photoId = String.valueOf(rand.nextInt(6)); // Foto del 0 al 5
 
                 // 2. Generamos puntos aleatorios entre 0 y 100 para TODOS los materiales
+                int nivel = rand.nextInt(101);     // EL NUEVO NIVEL
                 int points = rand.nextInt(101);
                 int glass = rand.nextInt(101);
                 int plastic = rand.nextInt(101);
@@ -54,16 +55,16 @@ public class GeneradorDePruebas {
                 int paper = rand.nextInt(101);     // NUEVO
                 int organic = rand.nextInt(101);   // NUEVO
 
-                // 3. Hacemos un INSERT personalizado para meter TODOS los datos (incluidos papel y organico)
-                String query = "INSERT INTO users (user_Name, email, password, creation_date, points, glass, plastic, metal, hard_to_recycle, paper, organic, user_photo) "
-                        + "VALUES ('" + userName + "', '" + email + "', '" + password + "', '" + creationDate + "', " +
-                        points + ", " + glass + ", " + plastic + ", " + metal + ", " + hard + ", " + paper + ", " + organic + ", '" + photoId + "')";
+                // 3. Hacemos un INSERT personalizado para meter TODOS los datos (incluidos nivel, papel y organico)
+                // OJO AQUÍ: Se agregó 'nivel' a las columnas y la variable + nivel + a los VALUES
+                String query = "INSERT INTO users (user_Name, email, password, creation_date, nivel, points, glass, plastic, metal, hard_to_recycle, paper, organic, user_photo) "
+                        + "VALUES ('" + userName + "', '" + email + "', '" + password + "', '" + creationDate + "', " + nivel + ", " + points + ", " +  glass + ", " + plastic + ", " + metal + ", " + hard + ", " + paper + ", " + organic + ", '" + photoId + "')";
 
                 stmt.executeUpdate(query);
                 cuentasCreadas++;
             }
 
-            System.out.println("✅ ¡Éxito! Se crearon " + cuentasCreadas + " cuentas falsas con todos los materiales aleatorios.");
+            System.out.println("✅ ¡Éxito! Se crearon " + cuentasCreadas + " cuentas falsas con todos los materiales y niveles aleatorios.");
 
         } catch (Exception e) {
             System.out.println("❌ Ocurrió un error al generar las cuentas: " + e.getMessage());

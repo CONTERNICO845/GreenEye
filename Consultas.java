@@ -118,6 +118,34 @@ public class Consultas {
 
         return 0;
     }
+    
+        // Metodo para consultar los nivel del usario
+    public int getNivel() {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT nivel FROM users WHERE id = " + loggedUserId;
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                int nivel = rs.getInt("nivel");
+                return nivel;
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al consultar los puntos: " + e.getMessage());
+
+        }
+
+        return 0;
+    }
 
     // Consulta los puntos de Vidrios
     public int getGlassPoints() {
@@ -329,6 +357,36 @@ public class Consultas {
 
     }
 
+
+    // Agregamos Niveles  al usuario
+    public void updateNivel(int nivelToAdd) {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return;
+
+            String query = "UPDATE users SET nivel = nivel + " + nivelToAdd + " WHERE id = " + loggedUserId;
+
+            int rowsAffected = stmt.executeUpdate(query);
+
+            if (rowsAffected > 0) {
+
+                int totalCurrentNivel = getNivel();
+                System.out.println("Se agregaron " + nivelToAdd + " niveles. Total actual: " + totalCurrentNivel);
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar los niveles: " + e.getMessage());
+
+        }
+
+    }
+
+
     // Update para Vidrio
     public void updateGlassPoints(int pointsToAdd) {
 
@@ -492,6 +550,27 @@ public class Consultas {
 
         } catch (Exception e) {
             System.out.println("Error al consultar el total global de Puntos: " + e.getMessage());
+        }
+        return 0;
+    }
+
+        // Obtener el total de vidrio de TODOS los usuarios
+    public int getTotalNivel() {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return 0;
+
+            String query = "SELECT SUM(nivel) FROM users";
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar el total global de Nivel: " + e.getMessage());
         }
         return 0;
     }

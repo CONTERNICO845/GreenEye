@@ -61,7 +61,7 @@ Codigo generado POR IA para consultas
             System.out.println("3. Estadísticas Globales (Toda la App)");
             System.out.println("4. Cambiar mi Contraseña");
             System.out.println("5. Ver ID de Foto");
-            System.out.println("6. Agregar Puntos (¡Probar Updates!)");
+            System.out.println("6. Agregar Puntos / Subir Nivel (¡Probar Updates!)");
             System.out.println("7. Salir");
             System.out.print("Opción: ");
 
@@ -71,6 +71,7 @@ Codigo generado POR IA para consultas
             switch (opcion) {
                 case 1:
                     System.out.println("\n--- 👤 MIS ESTADÍSTICAS ---");
+                    System.out.println("⭐ Nivel Actual: " + consultas.getNivel()); // NUEVO: Muestra el nivel
                     System.out.println("💰 Total Puntos Generales: " + consultas.getPoints());
                     System.out.println("  ↳ 🧊 Vidrio: " + consultas.getGlassPoints());
                     System.out.println("  ↳ 🥤 Plástico: " + consultas.getPlasticPoints());
@@ -123,7 +124,7 @@ Codigo generado POR IA para consultas
     }
 
     public static void menuAgregarPuntos(Consultas consultas, Scanner sc) {
-        System.out.println("\n--- ➕ SUMAR PUNTOS ---");
+        System.out.println("\n--- ➕ SUMAR PUNTOS O NIVELES ---");
         System.out.println("1. Puntos Generales");
         System.out.println("2. Vidrio");
         System.out.println("3. Plástico");
@@ -131,9 +132,10 @@ Codigo generado POR IA para consultas
         System.out.println("5. Reciclaje Difícil");
         System.out.println("6. Papel");
         System.out.println("7. Orgánico");
-        System.out.print("Elige material a sumar: ");
+        System.out.println("8. Subir Nivel"); // NUEVO: Opción para probar el update del nivel
+        System.out.print("Elige qué deseas sumar: ");
         int mat = sc.nextInt();
-        System.out.print("¿Cuántos puntos deseas agregar?: ");
+        System.out.print("¿Qué cantidad deseas agregar?: ");
         int pts = sc.nextInt();
         sc.nextLine();
 
@@ -145,7 +147,8 @@ Codigo generado POR IA para consultas
             case 5 -> consultas.updateHardToRecyclePoints(pts);
             case 6 -> consultas.updatePaperPoints(pts);
             case 7 -> consultas.updateOrganicPoints(pts);
-            default -> System.out.println("Material no válido.");
+            case 8 -> consultas.updateNivel(pts); // NUEVO: Llama al método para actualizar el nivel
+            default -> System.out.println("Opción no válida.");
         }
     }
 }

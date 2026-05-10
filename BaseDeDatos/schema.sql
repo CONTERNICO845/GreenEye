@@ -8,6 +8,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     creation_date VARCHAR(20),
     points INT DEFAULT 0,
+    nivel INT DEFAULT 0,
     glass INT DEFAULT 0,
     plastic INT DEFAULT 0,
     metal INT DEFAULT 0,
