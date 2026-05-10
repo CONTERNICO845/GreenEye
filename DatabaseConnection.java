@@ -13,7 +13,7 @@ public class DatabaseConnection {
             Class.forName("org.sqlite.JDBC");
             Connection conn = DriverManager.getConnection(url);
             
-            // Creamos la tabla con todos los campos necesarios y tipos de datos de SQLite
+            // Creamos la tabla con todos los campos necesarios (incluyendo 'nivel') y tipos de datos de SQLite
             String sql = "CREATE TABLE IF NOT EXISTS users ("
                        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                        + "user_name TEXT NOT NULL, "
@@ -21,6 +21,7 @@ public class DatabaseConnection {
                        + "password TEXT NOT NULL, "
                        + "creation_date TEXT, "
                        + "points INTEGER DEFAULT 0, "
+                       + "nivel INTEGER DEFAULT 0, "
                        + "glass INTEGER DEFAULT 0, "
                        + "plastic INTEGER DEFAULT 0, "
                        + "metal INTEGER DEFAULT 0, "

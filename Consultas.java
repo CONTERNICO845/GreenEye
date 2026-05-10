@@ -118,8 +118,8 @@ public class Consultas {
 
         return 0;
     }
-    
-        // Metodo para consultar los nivel del usario
+
+    // Metodo para consultar los nivel del usario
     public int getNivel() {
 
         try (Connection conn = DatabaseConnection.conectar();
@@ -259,50 +259,50 @@ public class Consultas {
 
     }
 
-    public String getPaper() {
+    public int getPaper() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
 
             if (conn == null)
-                return null;
+                return 0;
 
             String query = "SELECT paper FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
 
-                return rs.getString("paper");
+                return rs.getInt("paper");
 
             }
 
         } catch (Exception e) {
             System.out.println("Error al consultar el papel: " + e.getMessage());
         }
-        return null;
+        return 0;
     }
 
-    public String getOrganic() {
+    public int getOrganic() {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
 
             if (conn == null)
-                return null;
+                return 0;
 
             String query = "SELECT organic FROM users WHERE id = " + loggedUserId;
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
 
-                return rs.getString("organic");
+                return rs.getInt("organic");
 
             }
 
         } catch (Exception e) {
             System.out.println("Error al consultar lo organico: " + e.getMessage());
         }
-        return null;
+        return 0;
     }
 
     // Consulta el numero de foto del usuario actual
@@ -357,8 +357,7 @@ public class Consultas {
 
     }
 
-
-    // Agregamos Niveles  al usuario
+    // Agregamos Niveles al usuario
     public void updateNivel(int nivelToAdd) {
 
         try (Connection conn = DatabaseConnection.conectar();
@@ -385,7 +384,6 @@ public class Consultas {
         }
 
     }
-
 
     // Update para Vidrio
     public void updateGlassPoints(int pointsToAdd) {
@@ -474,8 +472,7 @@ public class Consultas {
             if (rowsAffected > 0) {
 
                 int total = getHardToRecyclePoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de Difícil Reciclaje. Total: " + total);
-
+                System.out.println("Se agregaron " + pointsToAdd + " puntos... Total: " + total);
             }
 
         } catch (Exception e) {
@@ -554,7 +551,7 @@ public class Consultas {
         return 0;
     }
 
-        // Obtener el total de vidrio de TODOS los usuarios
+    // Obtener el total de vidrio de TODOS los usuarios
     public int getTotalNivel() {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
