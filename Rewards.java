@@ -25,7 +25,7 @@ public class Rewards extends JPanel implements ActionListener {
     public Rewards() {
         consultas = new Consultas();   // CAMBIO: inicializar objeto
         puntos = consultas.getPoints(); // CAMBIO: obtener puntos desde DB
-        nivel = 1;
+        nivel = consultas.getNivel();
 
 
         setLayout(new BorderLayout());
@@ -66,7 +66,7 @@ public class Rewards extends JPanel implements ActionListener {
         add(panelTicket, BorderLayout.WEST);
 
         setSize(700, 400);
-        DarkMode(); // ✅ mantener tu método de colores
+        DarkMode(); // mantener tu método de colores
     }
 
     private JButton crearBoton(String texto, Color color, String rutaImagen) {
@@ -86,12 +86,13 @@ public class Rewards extends JPanel implements ActionListener {
     }
 
     private void verificarNivel() {
-        if (puntos >= nivel * 100) {
-            nivel++;
-            JOptionPane.showMessageDialog(this,
-                "¡Felicidades! Has alcanzado el nivel " + nivel);
-        }
+    if (puntos >= nivel * 100) {
+        nivel++;
+        consultas.setNivel(nivel); // <-- guardar en DB
+        JOptionPane.showMessageDialog(this,
+            "¡Felicidades! Has alcanzado el nivel " + nivel);
     }
+}
 
     private void actualizarEstado() {
         labelEstado.setText("Puntos: " + puntos + " | Nivel: " + nivel);
@@ -134,7 +135,7 @@ public class Rewards extends JPanel implements ActionListener {
             if (puntos >= PUNTOS_CANJEARVERD) {
                 consultas.updatePoints(-PUNTOS_CANJEARVERD); // CAMBIO
                 puntos = consultas.getPoints();              // CAMBIO
-                JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog junto a ");
+                JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog");
                 generarTicket("Combo big Agua fresca + Hotdog");
             } else {
                 JOptionPane.showMessageDialog(this, "Te faltan " + (PUNTOS_CANJEARVERD - puntos) + " puntos para canjear.");

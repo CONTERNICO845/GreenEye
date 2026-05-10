@@ -358,32 +358,23 @@ public class Consultas {
     }
 
     // Agregamos Niveles al usuario
-    public void updateNivel(int nivelToAdd) {
+    public void setNivel(int nuevoNivel) {
+    try (Connection conn = DatabaseConnection.conectar();
+         Statement stmt = conn.createStatement()) {
 
-        try (Connection conn = DatabaseConnection.conectar();
-                Statement stmt = conn.createStatement()) {
+        if (conn == null) return;
 
-            if (conn == null)
-                return;
+        String query = "UPDATE users SET nivel = " + nuevoNivel + " WHERE id = " + loggedUserId;
+        int rowsAffected = stmt.executeUpdate(query);
 
-            String query = "UPDATE users SET nivel = nivel + " + nivelToAdd + " WHERE id = " + loggedUserId;
-
-            int rowsAffected = stmt.executeUpdate(query);
-
-            if (rowsAffected > 0) {
-
-                int totalCurrentNivel = getNivel();
-                System.out.println("Se agregaron " + nivelToAdd + " niveles. Total actual: " + totalCurrentNivel);
-
-            }
-
-        } catch (Exception e) {
-
-            System.out.println("Error al agregar los niveles: " + e.getMessage());
-
+        if (rowsAffected > 0) {
+            System.out.println("Nivel actualizado correctamente a: " + nuevoNivel);
         }
 
+    } catch (Exception e) {
+        System.out.println("Error al actualizar el nivel: " + e.getMessage());
     }
+ }
 
     // Update para Vidrio
     public void updateGlassPoints(int pointsToAdd) {
