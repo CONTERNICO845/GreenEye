@@ -24,10 +24,13 @@ public class About_Us extends JPanel{
                     "Creemos en un mañana donde el reciclaje ya no sea una duda, sino un hábito sencillo facilitado por la inteligencia artificial. Nuestro compromiso es transformar la complejidad de la clasificación de residuos en una experiencia simple, rápida y efectiva para todos. Bienvenidos a la próxima generación de la sostenibilidad." +
                     "</p></html>";
 
+
     public About_Us(){
         this.setLayout(new GridLayout(2, 1));
         this.setBackground(AppColors.COLOR_MAIN_BACKGROUND);
-
+    if (Configuracion.esModoObscuro == true){
+        this.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+    }
         //Configura el panel superior
         topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
@@ -46,6 +49,7 @@ public class About_Us extends JPanel{
         namePanel.setLayout(new GridLayout(1, 5));
         namePanel.setOpaque(false);
         topPanel.add(namePanel, BorderLayout.SOUTH);
+        
 
         //Configura las fotos de los creadores
         for(int i = 0; i < 5; i++){
@@ -66,16 +70,29 @@ public class About_Us extends JPanel{
             JLabel nameJLabel = new JLabel(name, SwingConstants.CENTER);
             nameJLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
             namePanel.add(nameJLabel);
+        if (Configuracion.esModoObscuro) {
+            nameJLabel.setForeground(AppColors.COLOR_DARK_BLUE); // Texto negro en modo claro
+            }
         } 
 
+        
 
         //Configuracion del JLabel
         textLabel = new JLabel(muchoTexto);
         textLabel.setBackground(Color.WHITE);
         textLabel.setOpaque(false);
+         if (Configuracion.esModoObscuro) {
+            textLabel.setForeground(AppColors.COLOR_DARK_BLUE);
+        }
         textLabel.setHorizontalAlignment(SwingConstants.CENTER);
         textLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
         this.add(textLabel);
+
+
+        
+
+        this.revalidate();
+        this.repaint();
     }
 
     public static void main(String[] args){
