@@ -12,7 +12,6 @@ if hasattr(app, 'json'):
     app.json.ensure_ascii = False
 
 
-# 🔴🔴🔴 PEGA TU LLAVE EXACTAMENTE AQUÍ ADENTRO DE LAS COMILLAS 🔴🔴🔴
 API_KEY = "AIzaSyDBkXIwoKxY4GMSBtqjYIf3HaIYG76rGpU"
 genai.configure(api_key=API_KEY)
 
