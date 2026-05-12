@@ -147,7 +147,7 @@ Codigo generado POR IA para consultas
             case 5 -> consultas.updateHardToRecyclePoints(pts);
             case 6 -> consultas.updatePaperPoints(pts);
             case 7 -> consultas.updateOrganicPoints(pts);
-            case 8 -> consultas.updateNivel(pts); // NUEVO: Llama al método para actualizar el nivel
+            case 8 -> consultas.setNivel(pts); // NUEVO: Llama al método para actualizar el nivel
             default -> System.out.println("Opción no válida.");
         }
     }
