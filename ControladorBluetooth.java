@@ -4,46 +4,73 @@ import java.util.Scanner;
 import javax.swing.SwingUtilities;
 
 public class ControladorBluetooth {
-    // Estas NO deben llevar la palabra 'static'
     private SerialPort puerto;
     private PrintWriter salida;
 
     public void conectar(String nombrePuerto) {
+        // 1. Limpieza de seguridad: si el puerto estaba abierto, lo cerramos
+        if (puerto != null && puerto.isOpen()) {
+            puerto.closePort();
+        }
+
         puerto = SerialPort.getCommPort(nombrePuerto);
+        
+        // 2. Configuración de parámetros para el JDY-31
         puerto.setBaudRate(9600);
-        puerto.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
+        
+        // 3. CAMBIO CRÍTICO: Timeout semi-bloqueante
+        // Esto evita que Java se desconecte si el sensor no manda nada en 2 segundos
+        puerto.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0);
 
         if (puerto.openPort()) {
             System.out.println("--- Conectado con éxito a " + nombrePuerto + " ---");
+            
+            // 4. Pequeña pausa para estabilizar la línea serial
+            try { Thread.sleep(1000); } catch (InterruptedException e) {}
+
             salida = new PrintWriter(puerto.getOutputStream(), true);
             iniciarEscucha();
         } else {
             System.err.println("Error: No se pudo abrir el puerto " + nombrePuerto);
+            System.err.println("Asegúrate de que no esté abierto el Monitor Serial de Arduino.");
         }
     }
 
     private void iniciarEscucha() {
         Thread hilo = new Thread(() -> {
+            // 5. Usamos el InputStream para recibir los datos del sensor
             try (Scanner s = new Scanner(puerto.getInputStream())) {
-                while (s.hasNextLine()) {
+                while (puerto.isOpen() && s.hasNextLine()) {
                     String linea = s.nextLine().trim();
-                    System.out.println("Arduino dice: " + linea);
                     
-                    if (linea.equals("DETECTADO")) {
-                        SwingUtilities.invokeLater(() -> {
-                            System.out.println("¡Señal recibida en la App!");
-                        });
+                    if (!linea.isEmpty()) {
+                        System.out.println("Arduino dice: " + linea);
+                        
+                        // 6. Lógica del Sensor Ultrasónico (< 15cm)
+                        if (linea.equals("DETECTADO")) {
+                            // Ejecutamos en el hilo de la interfaz (GUI)
+                            SwingUtilities.invokeLater(() -> {
+                                ejecutarAccionBasura();
+                            });
+                        }
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Conexión finalizada.");
+                System.err.println("Conexión perdida o finalizada: " + e.getMessage());
             }
         });
+        hilo.setDaemon(true); // El hilo se cierra automáticamente si cierras la App
         hilo.start();
     }
 
+    // Aquí pones lo que quieres que pase cuando detecte basura
+    private void ejecutarAccionBasura() {
+        System.out.println("¡ALERTA! Objeto detectado a menos de 15cm.");
+        // Ejemplo: Cambiar el texto de una etiqueta o abrir otra ventana
+    }
+
     public void enviarDato(String mensaje) {
-        if (salida != null) {
+        if (salida != null && puerto.isOpen()) {
             salida.println(mensaje);
         }
     }
