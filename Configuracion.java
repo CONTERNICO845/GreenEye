@@ -97,6 +97,26 @@ public class Configuracion extends JPanel implements ActionListener {
         
         } else if (e.getSource() == btnOpcion3) {
             System.out.println("Eliminando cuenta... ¡Cuidado!");
+            Object [] opciones = {"No, no quiero eliminarlo", "Si, si quiero elimimarlo"};
+            int respuesta = JOptionPane.showOptionDialog(this,"Esta apunto de elinar su cuenta. \n¿Esta Seguro?",
+            "Ultima Advertencia", JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null, opciones, opciones [0]);    
+            if (respuesta == 1) { 
+                // El índice 1 corresponde a la segunda opción del arreglo: "Sí, Sí quiero eliminarla"
+                System.out.println("Eliminación de cuenta exitosa.");
+                
+                // Opcional: Mostrar un mensaje visual confirmando la eliminación
+                JOptionPane.showMessageDialog(this, 
+                        "Su cuenta ha sido eliminada con éxito.", 
+                        "Cuenta Eliminada", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    System.out.println("Eliminación Cancelada");
+                    
+                    JOptionPane.showMessageDialog(this, 
+                        "Operación Cancelada",
+                        "Cancelado", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
         }
     }
 
