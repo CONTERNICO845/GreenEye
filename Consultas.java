@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -359,22 +360,23 @@ public class Consultas {
 
     // Agregamos Niveles al usuario
     public void setNivel(int nuevoNivel) {
-    try (Connection conn = DatabaseConnection.conectar();
-         Statement stmt = conn.createStatement()) {
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
 
-        if (conn == null) return;
+            if (conn == null)
+                return;
 
-        String query = "UPDATE users SET nivel = " + nuevoNivel + " WHERE id = " + loggedUserId;
-        int rowsAffected = stmt.executeUpdate(query);
+            String query = "UPDATE users SET nivel = " + nuevoNivel + " WHERE id = " + loggedUserId;
+            int rowsAffected = stmt.executeUpdate(query);
 
-        if (rowsAffected > 0) {
-            System.out.println("Nivel actualizado correctamente a: " + nuevoNivel);
+            if (rowsAffected > 0) {
+                System.out.println("Nivel actualizado correctamente a: " + nuevoNivel);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al actualizar el nivel: " + e.getMessage());
         }
-
-    } catch (Exception e) {
-        System.out.println("Error al actualizar el nivel: " + e.getMessage());
     }
- }
 
     // Update para Vidrio
     public void updateGlassPoints(int pointsToAdd) {
@@ -685,6 +687,37 @@ public class Consultas {
             System.out.println("Error al consultar el total global de organico: " + e.getMessage());
         }
         return 0;
+    }
+
+    //Borrar la cuenta XD
+    public int deleteAccount() {
+       
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.conectar();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null)
+                return 0;
+
+            // Establecemos el ID del usuario en la consulta
+            pstmt.setInt(1, loggedUserId);
+
+            // executeUpdate devuelve el número de filas afectadas
+            int filasBorradas = pstmt.executeUpdate();
+
+            if (filasBorradas > 0) {
+                System.out.println("Cuenta eliminada exitosamente.");
+                // Opcional: Reiniciar el ID de sesión tras borrar la cuenta
+                loggedUserId = -1;
+            }
+
+            return filasBorradas;
+
+        } catch (Exception e) {
+            System.out.println("Error al intentar eliminar la cuenta: " + e.getMessage());
+            return 0;
+        }
     }
 
     // Consulta del top 10 usarios con mas puntos
