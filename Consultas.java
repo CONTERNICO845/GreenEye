@@ -91,6 +91,33 @@ public class Consultas {
         }
 
     }
+    //Usuario
+    public String getUserName() {
+
+        try (Connection conn = DatabaseConnection.conectar();
+                Statement stmt = conn.createStatement()) {
+
+            if (conn == null)
+                return "Usuario"; // Valor por defecto en caso de no haber conexión
+
+            String query = "SELECT user_Name FROM users WHERE id = " + loggedUserId;
+            ResultSet rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+
+                String userName = rs.getString("user_Name");
+                return userName;
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("Error al consultar el nombre de usuario: " + e.getMessage());
+
+        }
+
+        return "Usuario"; // Valor por defecto si falla la consulta
+    }
 
     // Metodo para consultar los puntos del usario
     public int getPoints() {
