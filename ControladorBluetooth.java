@@ -18,7 +18,7 @@ public class ControladorBluetooth {
         puerto = SerialPort.getCommPort(nombrePuerto);
 
         // 2. Configuración de parámetros para el JDY-31
-        puerto.setBaudRate(9600);
+        puerto.setBaudRate(38400);
 
         // 3. CAMBIO CRÍTICO: Timeout semi-bloqueante
         // Esto evita que Java se desconecte si el sensor no manda nada en 2 segundos
