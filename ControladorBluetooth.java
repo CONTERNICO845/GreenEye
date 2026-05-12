@@ -50,25 +50,26 @@ public class ControladorBluetooth {
                 System.out.println("Esperando bytes del Arduino...");
 
                 while (puerto.isOpen()) {
-                    if (entrada.available() > 0) {
-                        int bytesLeidos = entrada.read(buffer);
+
+                    int bytesLeidos = entrada.read(buffer); // 🔥 lectura directa (clave)
+
+                    if (bytesLeidos > 0) {
                         String mensaje = new String(buffer, 0, bytesLeidos).trim();
 
                         System.out.println("RECIBIDO RAW: [" + mensaje + "]");
 
                         if (mensaje.contains("DETECTADO")) {
                             System.out.println("¡CRÍTICO: Sensor activado!");
-                            // Aquí llamas a tu interfaz
                         }
                     }
-                    Thread.sleep(50); // Pequeño respiro para el procesador
                 }
+
             } catch (Exception e) {
                 System.err.println("Error en lectura: " + e.getMessage());
             }
         });
+
         hilo.setDaemon(true);
         hilo.start();
-
     }
 }
