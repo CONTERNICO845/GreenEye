@@ -12,16 +12,28 @@ class MyPanel extends PanelBase {
 //Falta inicializar el server de python (Creo)
 public class MainWindow {
 
+    // Main method that starts the application
     public static void main(String[] args) {
-        JFrame window = new JFrame("Main window");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        System.out.println("iniciando app"); // Prints a message indicating the start of the app
 
-        MyPanel content = new MyPanel("Inicio");
+        // Creates and configures the main window
+        JFrame window = new JFrame("Main window");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Configures the close operation to exit on closing the window
+
+        // Adds the content panel to the window
+        MyPanel content = new MyPanel("Inicio"); // Creates a new instance of MyPanel with the name "Inicio"
         window.add(content);
 
-        window.pack();
-        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        window.setLocationRelativeTo(null);
+        // Packs and configures the window's layout and size
+        window.pack(); // Adjusts the window's size to fit its contents
+        window.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximizes the window
+        window.setLocationRelativeTo(null); // Centers the window on the screen
+
+        // Makes the window visible
         window.setVisible(true);
+
+        // Initializes and connects the Bluetooth controller
+        ControladorBluetooth bluetooth = new ControladorBluetooth(); // Creates a new instance of ControladorBluetooth
+        bluetooth.conectar("COM3"); // Connects to the Bluetooth device on COM port 3
     }
 }
