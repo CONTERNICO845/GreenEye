@@ -34,6 +34,6 @@ public class MainWindow {
 
         // Initializes and connects the Bluetooth controller
         ControladorBluetooth bluetooth = new ControladorBluetooth(); // Creates a new instance of ControladorBluetooth
-        bluetooth.conectar("COM4"); // Connects to the Bluetooth device on COM port 3
+        bluetooth.conectar("COM8"); // Connects to the Bluetooth device on COM port 3
     }
 }
