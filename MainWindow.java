@@ -53,6 +53,6 @@ public class MainWindow {
 
         // Initializes and connects the Bluetooth controller
         ControladorBluetooth bluetooth = new ControladorBluetooth(); // Creates a new instance of ControladorBluetooth
-        bluetooth.conectar("COM8"); // Selecciona el puerto que necesite (a mi no me funciona el 8 pero a Manuel si)
+       bluetooth.conectar("COM8"); // Selecciona el puerto que necesite (a mi no me funciona el 8 pero a Manuel si)
     }
 }

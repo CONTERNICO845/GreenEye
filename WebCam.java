@@ -18,49 +18,28 @@ import java.net.URL;
 import java.util.Base64;
 
 public class WebCam extends JFrame {
-    private Process procesoPython;
     private BufferedImage imagenActual;
     private JPanel panelFoto;
-    
     private JPanel panelResultados; 
     private JLabel lblObjetoDetectado;
     private JLabel lblBoteRecomendado;
 
-    private final int TAMANO_CIRCULO = 500; 
+    private final int TAMANO_CIRCULO = 500;
     private final int MARGEN_INTERNO = 15;
-    private final Color COLOR_VERDE = new Color(34, 139, 34); 
+    private final Color COLOR_VERDE = new Color(34, 139, 34);
 
     public WebCam() {
-        setTitle("Clasificador de Basura con IA");
+        setTitle("Clasificador de Basura con IA - Green Eye");
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE);
-
-        try {
-            ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "python", "servidor_ia.py");
-            pb.redirectErrorStream(true); 
-            procesoPython = pb.start();
-
-            new Thread(() -> {
-                try {
-                  BufferedReader reader = new BufferedReader(new InputStreamReader(procesoPython.getInputStream()));
-                    String linea;
-                    while ((linea = reader.readLine()) != null) {
-                        System.out.println("[PYTHON]: " + linea);
-                    }
-                } catch (Exception e) {}
-            }).start();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
         JPanel panelIzquierdo = new JPanel();
         panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.Y_AXIS));
         panelIzquierdo.setBackground(Color.WHITE);
-
+        
         panelFoto = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -121,7 +100,7 @@ public class WebCam extends JFrame {
         panelCentroTexto.setLayout(new BoxLayout(panelCentroTexto, BoxLayout.Y_AXIS));
         panelCentroTexto.setOpaque(false);
 
-        JLabel tituloResultados = new JLabel("Clasificacion de Residuos");
+        JLabel tituloResultados = new JLabel("Clasificación de Residuos");
         tituloResultados.setFont(new Font("Arial", Font.BOLD, 22));
         tituloResultados.setAlignmentX(Component.LEFT_ALIGNMENT);
         
@@ -131,23 +110,20 @@ public class WebCam extends JFrame {
         lblObjetoDetectado.setForeground(Color.DARK_GRAY);
 
         lblBoteRecomendado = new JLabel("<html>--</html>");
-        lblBoteRecomendado.setVerticalAlignment(SwingConstants.TOP); // Para que el texto empiece arriba
+        lblBoteRecomendado.setVerticalAlignment(SwingConstants.TOP); 
         
-        // --- AQUÍ CREAMOS EL SCROLL Y METEMOS LA ETIQUETA ADENTRO ---
         JScrollPane scrollResultados = new JScrollPane(lblBoteRecomendado);
         scrollResultados.setPreferredSize(new Dimension(400, 500)); 
         scrollResultados.setBorder(null); 
         scrollResultados.setOpaque(false);
         scrollResultados.getViewport().setOpaque(false);
         scrollResultados.setAlignmentX(Component.LEFT_ALIGNMENT);
-        scrollResultados.getVerticalScrollBar().setUnitIncrement(16); // Scroll suave con la rueda del ratón
+        scrollResultados.getVerticalScrollBar().setUnitIncrement(16);
 
         panelCentroTexto.add(tituloResultados);
         panelCentroTexto.add(Box.createVerticalStrut(10));
         panelCentroTexto.add(lblObjetoDetectado);
         panelCentroTexto.add(Box.createVerticalStrut(30));
-        
-        // EN LUGAR DE AGREGAR LA ETIQUETA DIRECTA, AGREGAMOS EL SCROLL
         panelCentroTexto.add(scrollResultados);
         
         panelResultados.add(panelCentroTexto, BorderLayout.NORTH);
@@ -175,29 +151,40 @@ public class WebCam extends JFrame {
             repaint();
         }
 
-        lblObjetoDetectado.setText("Analizando elementos...");
-        lblBoteRecomendado.setText("<html>Estructurando clasificación...</html>");
+        lblObjetoDetectado.setText("Analizando elementos en la nube...");
+        lblBoteRecomendado.setText("<html><span style='color: gray;'>Consultando servidor de IA de Green Eye...</span></html>");
         
         SwingWorker<String[], Void> worker = new SwingWorker<String[], Void>() {
             @Override
             protected String[] doInBackground() throws Exception {
+                // Convertir la imagen capturada a Base64
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(imagenActual, "png", baos);
                 String imagenBase64 = Base64.getEncoder().encodeToString(baos.toByteArray());
 
-                // CONEXIÓN AL NUEVO PUERTO 5006
-                URL url = new URL("http://localhost:5009/clasificar");
+                // TU NUEVO SERVIDOR EN RENDER
+                URL url = new URL("https://ia-m3he.onrender.com/clasificar");
                 HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
                 conexion.setRequestMethod("POST");
                 conexion.setRequestProperty("Content-Type", "application/json");
                 conexion.setDoOutput(true);
 
+                // Construir el JSON para enviar a Python
                 String jsonEntrada = "{\"imagen\": \"" + imagenBase64 + "\"}";
+
+                // Enviar la petición
                 try (OutputStream os = conexion.getOutputStream()) {
                     byte[] input = jsonEntrada.getBytes("utf-8");
                     os.write(input, 0, input.length);
                 }
 
+                // Validar la respuesta del servidor HTTP
+                int statusCode = conexion.getResponseCode();
+                if (statusCode != 200) {
+                    throw new RuntimeException("Error en el servidor de IA. Código HTTP: " + statusCode);
+                }
+
+                // Leer la respuesta de Python
                 BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"));
                 StringBuilder respuesta = new StringBuilder();
                 String linea;
@@ -205,10 +192,22 @@ public class WebCam extends JFrame {
                     respuesta.append(linea.trim());
                 }
 
+                // Extraer el texto "objeto" y "bote" usando expresiones regulares seguras
                 String jsonRespuesta = respuesta.toString();
-                String objeto = jsonRespuesta.replaceAll(".*\"objeto\"\\s*:\\s*\"([^\"]+)\".*", "$1");
-                String bote = jsonRespuesta.replaceAll(".*\"bote\"\\s*:\\s*\"([^\"]+)\".*", "$1");
+                String objeto = "Error de lectura";
+                String bote = "HTML no procesado";
                 
+                try {
+                    objeto = jsonRespuesta.split("\"objeto\"\\s*:\\s*\"")[1].split("\"")[0];
+                    bote = jsonRespuesta.split("\"bote\"\\s*:\\s*\"")[1].split("\"(,|\\})")[0];
+                    // Recuperar saltos de línea y limpiar formato escapado si existe
+                    bote = bote.replace("\\n", "").replace("\\\"", "\"").replace("\\/", "/");
+                } catch (Exception e) {
+                    System.out.println("No se pudo parsear el JSON exactamente, aplicando regex de respaldo.");
+                    objeto = jsonRespuesta.replaceAll(".*\"objeto\"\\s*:\\s*\"([^\"]+)\".*", "$1");
+                    bote = jsonRespuesta.replaceAll(".*\"bote\"\\s*:\\s*\"([^\"]+)\".*", "$1");
+                }
+
                 return new String[]{objeto, bote};
             }
 
@@ -217,14 +216,11 @@ public class WebCam extends JFrame {
                 try {
                     String[] resultado = get();
                     lblObjetoDetectado.setText("Estado: " + resultado[0]);
-                    
-                    // Renderizamos el HTML exacto que nos mandó Python
                     lblBoteRecomendado.setText("<html>" + resultado[1] + "</html>");
-                    
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    lblObjetoDetectado.setText("Error en la conexion");
-                    lblBoteRecomendado.setText("--");
+                    lblObjetoDetectado.setText("Error en la conexión");
+                    lblBoteRecomendado.setText("<html><span style='color: red;'>Falla al conectar con la API en Render. Revisa la consola o tu conexión a internet.</span></html>");
                 }
             }
         };
@@ -243,7 +239,7 @@ public class WebCam extends JFrame {
                 WebcamPanel p = new WebcamPanel(webcam);
                 p.setMirrored(true);
 
-                JDialog ventanaCam = new JDialog(this, "Capturar", true);
+                JDialog ventanaCam = new JDialog(this, "Capturar - Green Eye", true);
                 JButton btnCaptura = new JButton("TOMAR FOTO");
                 btnCaptura.addActionListener(e -> {
                     imagenActual = webcam.getImage();
@@ -260,7 +256,9 @@ public class WebCam extends JFrame {
                 ventanaCam.pack();
                 ventanaCam.setLocationRelativeTo(this);
                 ventanaCam.setVisible(true);
-            } catch (Exception ex) { ex.printStackTrace(); }
+            } catch (Exception ex) { 
+                ex.printStackTrace();
+            }
         }).start();
     }
 
@@ -279,17 +277,11 @@ public class WebCam extends JFrame {
     }
 
     public static void main(String[] args) {
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) {}
+        try { 
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {}
         
         WebCam ventana = new WebCam();
-        
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (ventana.procesoPython != null) {
-                ventana.procesoPython.destroy();
-                System.out.println("Servidor de IA apagado correctamente.");
-            }
-        }));
-
         SwingUtilities.invokeLater(() -> ventana.setVisible(true));
     }
 }
