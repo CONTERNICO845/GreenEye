@@ -8,7 +8,7 @@ public class Mapa extends JPanel {
 
     public Mapa() {
         // Carga la imagen de fondo desde la carpeta "IMAGENES/MapaCut.png"
-        backgroundImage = new ImageIcon(getClass().getResource("/IMAGENES/MAPA/MapaCut.png"));
+        backgroundImage = new ImageIcon(getClass().getResource("/Imagenes/MAPA/MapaCut.png"));
     }
 
     @Override

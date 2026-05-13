@@ -1,5 +1,4 @@
 //Codigo hecho por el God Giovanni Sandoval
-import java.io.IOException;
 import javax.swing.*;
 
 class MyPanel extends PanelBase {
@@ -15,19 +14,24 @@ public class MainWindow {
 
     // Método para iniciar el puente de Python de forma invisible
     public static void StartPythonServer() {
+    new Thread(() -> {
         try {
-            // "python" es el comando, "servidor_ia.py" es tu archivo
+            // Asegúrate de usar la ruta correcta a tu archivo .py
             ProcessBuilder pb = new ProcessBuilder("python", "servidor_ia.py");
+            pb.inheritIO(); // Esto hace que los "prints" de Python salgan en la consola de Java
+            Process proceso = pb.start();
             
-            // Esto evita que se abra una ventana negra molesta
-            pb.redirectErrorStream(true); 
-            pb.start(); 
+            // Esto asegura que si cierras Java, el proceso de Python también se detenga
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                proceso.destroy();
+            }));
             
-            System.out.println("Servidor Python iniciado en segundo plano...");
-        } catch (IOException e) {
-            System.out.println("Error al iniciar Python: " + e.getMessage());
+            System.out.println("--- Servidor Python iniciado desde Java ---");
+        } catch (Exception e) {
+            System.err.println("Error al iniciar el servidor Python: " + e.getMessage());
         }
-    }
+    }).start();
+}
 
     // Main method that starts the application
     public static void main(String[] args) {

@@ -17,10 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-/**
- * WebCamNew corregida para funcionar como un componente JPanel. Ahora puede ser
- * insertada en cualquier contenedor o switch de pantallas.
- */
 public class WebCamNew extends JPanel {
 
     private BufferedImage imagenActual;
@@ -112,6 +108,11 @@ public class WebCamNew extends JPanel {
                     JOptionPane.showMessageDialog(this, "No hay cámara disponible");
                     return;
                 }
+
+                //Si ya estaba encendida la reinicia
+                if (webcam.isOpen()) {
+                webcam.close();
+            }
                 webcam.setViewSize(WebcamResolution.VGA.getSize());
                 WebcamPanel p = new WebcamPanel(webcam);
                 p.setMirrored(true);
