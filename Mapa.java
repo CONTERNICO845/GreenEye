@@ -17,13 +17,4 @@ public class Mapa extends JPanel {
         // Dibuja la imagen de fondo alrededor del JPanel
         g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
     }
-
-    public static void main(String[] args) {
-        // Crea una ventana para mostrar el JPanel
-        JFrame frame = new JFrame("Mapa");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new Mapa());
-        frame.pack();
-        frame.setVisible(true);
-    }
 }

@@ -138,6 +138,7 @@ abstract class PanelBase extends JPanel {
                 boton.setFocusPainted(false);
             }
         }
+        choosePanel("Inicio");
     }
 
     //Metodo que cambia entre el panel cerrado y abierto 
@@ -171,7 +172,7 @@ abstract class PanelBase extends JPanel {
         JPanel newScreen = null;
 
         newScreen = switch (screenName) {
-            case "Inicio" -> new JPanel();
+            case "Inicio" -> new WebCamNew();
             case "Estadisticas" -> new Statistics();
             case "Rewards" -> new Rewards();
             case "Mapa" -> new Mapa();

@@ -1,4 +1,5 @@
 //Codigo hecho por el God Giovanni Sandoval
+import java.io.IOException;
 import javax.swing.*;
 
 class MyPanel extends PanelBase {
@@ -12,8 +13,26 @@ class MyPanel extends PanelBase {
 //Falta inicializar el server de python (Creo)
 public class MainWindow {
 
+    // Método para iniciar el puente de Python de forma invisible
+    public static void StartPythonServer() {
+        try {
+            // "python" es el comando, "servidor_ia.py" es tu archivo
+            ProcessBuilder pb = new ProcessBuilder("python", "servidor_ia.py");
+            
+            // Esto evita que se abra una ventana negra molesta
+            pb.redirectErrorStream(true); 
+            pb.start(); 
+            
+            System.out.println("Servidor Python iniciado en segundo plano...");
+        } catch (IOException e) {
+            System.out.println("Error al iniciar Python: " + e.getMessage());
+        }
+    }
+
     // Main method that starts the application
     public static void main(String[] args) {
+        StartPythonServer();
+
         System.out.println("iniciando app"); // Prints a message indicating the start of the app
 
         // Creates and configures the main window

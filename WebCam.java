@@ -1,4 +1,4 @@
-import com.github.sarxos.webcam.Webcam;
+/*import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
 
@@ -293,3 +293,4 @@ public class WebCam extends JFrame {
         SwingUtilities.invokeLater(() -> ventana.setVisible(true));
     }
 }
+*/
