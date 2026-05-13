@@ -71,12 +71,90 @@ public class Configuracion extends JPanel implements ActionListener {
 
     }
     }
+    private void volverAlLogin() {
+        // 1. Instanciamos y mostramos tu ventana de Login
+        Login ventanaLogin = new Login();
+        ventanaLogin.setVisible(true);
+
+        // 2. Buscamos la ventana principal que contiene este panel (MainWindow) y la cerramos
+        Window ventanaActual = SwingUtilities.getWindowAncestor(this);
+        if (ventanaActual != null) {
+            ventanaActual.dispose();
+        }
+    }
 //Pegamento que reconoce que se presionarón los botones
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnOpcion1) {
             System.out.println("Cambiando contraseña...");
+            System.out.println("Cambiar Contraseña");
+            Object [] opciones2 = {"Quiero Cambiar mi contraseña", "No, no quiero cambiarla"};
             
+            int respuesta2 = JOptionPane.showOptionDialog(this,
+            "Esta apunto de Cambiar su contraseña. \n¿Esta Seguro?",
+            "Advertencia de cambio de contraseña", JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,
+            null, opciones2, opciones2 [0]);    
+            
+            if (respuesta2 == 0) { 
+                
+                // 1. Creamos un campo de texto especial para contraseñas (oculta los caracteres)
+                JPasswordField campoNuevaPassword = new JPasswordField(15);
+                JTextField campoConfirmarPassword = new JTextField(15);
+
+
+                Object[] mensajeFormulario = {
+                    "Escriba su nueva contraseña:", campoNuevaPassword,
+                    "Repita la nueva contraseña", campoConfirmarPassword 
+                };
+
+                
+                // 2. Mostramos el cuadro pidiendo la nueva contraseña
+                int botonPresionado = JOptionPane.showConfirmDialog(
+                        this, 
+                        mensajeFormulario, 
+                        "Ingresar Nueva Contraseña", 
+                        JOptionPane.OK_CANCEL_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE
+                );      
+
+                if (botonPresionado == JOptionPane.OK_OPTION) {
+                    String nuevaPassword = campoNuevaPassword.getText();
+                    String confirmarPassword = campoConfirmarPassword.getText();
+
+                    // Validación 1: Que no esté vacía
+                    if (nuevaPassword.trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(this,
+                                "La contraseña no puede estar vacía. Intente de nuevo.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                                
+                    // Validación 2: Que ambas contraseñas escritas coincidan
+                    } else if (!nuevaPassword.equals(confirmarPassword)) {
+                        JOptionPane.showMessageDialog(this,
+                                "Las contraseñas no coinciden. Inténtelo de nuevo.",
+                                "Error de Verificación",
+                                JOptionPane.ERROR_MESSAGE);
+                                
+                    // Si pasa las validaciones, guardamos en la Base de Datos
+                    } else {
+                        System.out.println("Guardando Contraseña");
+
+                        Consultas baseDatos = new Consultas();
+                        baseDatos.updatePassword(nuevaPassword);
+
+                        JOptionPane.showMessageDialog(this, 
+                                "Su contraseña se cambió con éxito",
+                                "Cambio Exitoso", JOptionPane.INFORMATION_MESSAGE);
+
+                        volverAlLogin();
+                    }
+                } else {
+                    System.out.println("El usuario cerró el cuadro de texto");
+                }
+            } else {
+                System.out.println("Cambio de contraseña cancelado en la primer advertencia");
+            }
+          
         } else if (e.getSource() == btnOpcion2) {
             System.out.println("Activando Modo Oscuro...");
         esModoObscuro = !esModoObscuro;
@@ -90,11 +168,13 @@ public class Configuracion extends JPanel implements ActionListener {
             this.revalidate();
             this.repaint();
 
+
+
             Container ancestor = SwingUtilities.getAncestorOfClass(PanelBase.class, this);
             if (ancestor instanceof PanelBase) {
                 ((PanelBase) ancestor).darkMode(); 
             }
-
+            
         
         } else if (e.getSource() == btnOpcion3) {
             System.out.println("Eliminando cuenta... ¡Cuidado!");
@@ -111,8 +191,10 @@ public class Configuracion extends JPanel implements ActionListener {
                         "Su cuenta ha sido eliminada con éxito.", 
                         "Cuenta Eliminada", 
                         JOptionPane.INFORMATION_MESSAGE);
-                       
-                } else {
+                
+                        volverAlLogin();       
+                
+                    } else {
                     
                     JOptionPane.showMessageDialog(this, 
                             "No se pudo eliminar la cuenta. Intente más tarde.", 
@@ -149,6 +231,7 @@ public class Configuracion extends JPanel implements ActionListener {
                 System.out.println("Cuenta eliminada exitosamente.");
                 // Opcional: Reiniciar el ID de sesión tras borrar la cuenta
                 Consultas.loggedUserId = -1;
+                
             }
 
             return filasBorradas;

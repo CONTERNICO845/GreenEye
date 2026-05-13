@@ -716,7 +716,7 @@ public class Consultas {
         return 0;
     }
 
-    //Borrar la cuenta XD
+    //Borrar la cuenta XD (Ya sirve y esta God)
     public static int deleteAccount() {
        
         String sql = "DELETE FROM users WHERE id = ?";
