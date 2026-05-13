@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.sql.*;
 
 public class Configuracion extends JPanel implements ActionListener {
 
@@ -103,12 +104,22 @@ public class Configuracion extends JPanel implements ActionListener {
             if (respuesta == 1) { 
                 // El índice 1 corresponde a la segunda opción del arreglo: "Sí, Sí quiero eliminarla"
                 System.out.println("Eliminación de cuenta exitosa.");
+                int resultado = deleteAccount();
                 
-                // Opcional: Mostrar un mensaje visual confirmando la eliminación
+                if (resultado > 0) {
                 JOptionPane.showMessageDialog(this, 
                         "Su cuenta ha sido eliminada con éxito.", 
                         "Cuenta Eliminada", 
                         JOptionPane.INFORMATION_MESSAGE);
+                       
+                } else {
+                    
+                    JOptionPane.showMessageDialog(this, 
+                            "No se pudo eliminar la cuenta. Intente más tarde.", 
+                            "Error en el Servidor", 
+                            JOptionPane.ERROR_MESSAGE);
+                }        
+
                 } else {
                     System.out.println("Eliminación Cancelada");
                     
@@ -116,9 +127,39 @@ public class Configuracion extends JPanel implements ActionListener {
                         "Operación Cancelada",
                         "Cancelado", 
                         JOptionPane.INFORMATION_MESSAGE);
-                }
+            }
         }
     }
+    public static int deleteAccount(){
+       String sql = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.conectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null)
+                return 0;
+
+            // Se respeta tu instrucción: "loggedUserId" ya es reconocido por el sistema
+            pstmt.setInt(1, Consultas.loggedUserId);
+
+            // executeUpdate devuelve el número de filas afectadas
+            int filasBorradas = pstmt.executeUpdate();
+
+            if (filasBorradas > 0) {
+                System.out.println("Cuenta eliminada exitosamente.");
+                // Opcional: Reiniciar el ID de sesión tras borrar la cuenta
+                Consultas.loggedUserId = -1;
+            }
+
+            return filasBorradas;
+
+        } catch (Exception ex) {
+            System.out.println("Error al intentar eliminar la cuenta: " + ex.getMessage());
+            return 0;
+        }
+    }
+
+
 
     public static void main(String[] args){
         Configuracion ventana = new Configuracion();
