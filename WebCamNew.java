@@ -175,13 +175,33 @@ public class WebCamNew extends JPanel {
                     lblObjetoDetectado.setText(respuesta.toUpperCase());
 
                     if (this.bluetooth != null) {
-                        // Verificamos si la respuesta del JSON contiene alguna categoría de basura
-                        if (respuesta.contains("PLASTICO") || respuesta.contains("PAPEL")
-                                || respuesta.contains("CARTON") || respuesta.contains("METAL")
-                                || respuesta.contains("ORGANICO") || respuesta.contains("VIDRIO")
-                                || respuesta.contains("DIFICIL RECICLAJE") || respuesta.contains("PILAS")){
-                            // Enviamos el dato al Arduino (Modifica la "A" por el caracter que espera tu código de Arduino)
-                            bluetooth.enviarDato("A");
+                        // Convertimos la respuesta a mayúsculas para evitar errores de comparación
+                        String resUpper = respuesta.toUpperCase();
+                        String letraAEnviar = "";
+
+                        // Determinamos qué letra enviar según la categoría encontrada en el JSON
+                        if (resUpper.contains("PLASTICO")) {
+                            letraAEnviar = "P"; // P de Plástico
+                        } else if (resUpper.contains("PAPEL") || resUpper.contains("CARTON")) {
+                            letraAEnviar = "C"; // C de Cartón/Papel
+                        } else if (resUpper.contains("METAL")) {
+                            letraAEnviar = "M"; // M de Metal
+                        } else if (resUpper.contains("ORGANICO")) {
+                            letraAEnviar = "O"; // O de Orgánico
+                        } else if (resUpper.contains("VIDRIO")) {
+                            letraAEnviar = "V"; // V de Vidrio
+                        } else if (resUpper.contains("PILAS")) {
+                            letraAEnviar = "B"; // B de Baterías
+                        } else if (resUpper.contains("DIFICIL RECICLAJE")) {
+                            letraAEnviar = "R"; // R de Reciclaje o Resto
+                        }
+
+                        // Si encontramos una categoría válida, enviamos la letra correspondiente
+                        if (!letraAEnviar.isEmpty()) {
+                            bluetooth.enviarDato(letraAEnviar);
+                            System.out.println(">>> SEÑAL ENVIADA AL ARDUINO: " + letraAEnviar);
+                        } else {
+                            System.out.println(">>> OBJETO DETECTADO NO ES BASURA O NO ESTÁ CATEGORIZADO");
                         }
                     }
                 });
