@@ -154,10 +154,13 @@ public class cuenta extends JPanel {
         lbl.setFont(new Font("Arial", Font.BOLD, 14));
         lbl.setForeground(COLOR_TEXTO); // Letra blanca
         lbl.setOpaque(true);
+        
         lbl.setBackground(COLOR_IZQUIERDO); // Fondo verde oscuro
+        
         lbl.setBorder(BorderFactory.createLineBorder(COLOR_FONDO_MAIN, 2)); // Borde verde clarito
+        
         if(Configuracion.esModoObscuro == true){
-            lbl.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            lbl.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
             lbl.setForeground(AppColors.COLOR_DARK_BLUE);   
             lbl.setBorder(BorderFactory.createLineBorder(AppColors.COLOR_DARK_BACKGROUND)); 
         }

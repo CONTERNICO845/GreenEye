@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import java.io.ByteArrayOutputStream;
+import java.security.cert.TrustAnchor;
 import java.util.Base64;
 
 public class WebCamNew extends JPanel {
@@ -25,10 +26,16 @@ public class WebCamNew extends JPanel {
         // Configuración básica del panel
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-
+        if(Configuracion.esModoObscuro == true );{
+        this.setBackground(AppColors.COLOR_DARK_BACKGROUND);    
+        }
         JPanel panelIzquierdo = new JPanel();
         panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.Y_AXIS));
         panelIzquierdo.setBackground(Color.WHITE);
+        if (Configuracion.esModoObscuro) {
+            panelIzquierdo.setBackground(AppColors.COLOR_DARK_BACKGROUND_2);
+        }
+
 
         // Panel personalizado para el dibujo de la foto circular
         panelFoto = new JPanel() {
@@ -42,8 +49,11 @@ public class WebCamNew extends JPanel {
                 int y = (getHeight() - TAMANO_CIRCULO) / 2;
 
                 g2.setColor(COLOR_VERDE);
+            if (Configuracion.esModoObscuro) {
+                g2.setColor(AppColors.COLOR_DARK_BLUE);
+            }
                 g2.fillOval(x, y, TAMANO_CIRCULO, TAMANO_CIRCULO);
-
+    
                 if (imagenActual != null) {
                     int diametroFoto = TAMANO_CIRCULO - (MARGEN_INTERNO * 2);
                     int xFoto = x + MARGEN_INTERNO;
@@ -61,14 +71,46 @@ public class WebCamNew extends JPanel {
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelBotones.setOpaque(false);
 
+
         JButton btnCamara = new JButton("Usar Cámara");
         JButton btnArchivo = new JButton("Subir Archivo");
         JButton btnEscanear = new JButton("Escanear");
+       
 
         Dimension dimBoton = new Dimension(160, 40);
-        btnCamara.setPreferredSize(dimBoton);
-        btnArchivo.setPreferredSize(dimBoton);
-        btnEscanear.setPreferredSize(dimBoton);
+
+        //CONFIGURACIÓN BOTÓN CAMARA
+        btnCamara.setBackground(AppColors.COLOR_MAIN_BUTTONS);
+        btnCamara.setForeground(Color.WHITE);           
+        btnCamara.setOpaque(true);                      
+        btnCamara.setBorderPainted(false);
+        btnCamara.setFocusPainted(false);
+        if(Configuracion.esModoObscuro == true){
+            btnCamara.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            btnCamara.setForeground(AppColors.COLOR_DARK_BLUE);
+        }             
+
+        //CONFIGURACIÓN BOTÓN ARCHIVO
+        btnArchivo.setBackground(AppColors.COLOR_MAIN_BUTTONS);
+        btnArchivo.setForeground(Color.WHITE);
+        btnArchivo.setOpaque(true);
+        btnArchivo.setBorderPainted(false);
+        btnArchivo.setFocusPainted(false);
+        if(Configuracion.esModoObscuro == true){
+            btnArchivo.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            btnArchivo.setForeground(AppColors.COLOR_DARK_BLUE);
+        }     
+
+        //CONFIGURACIÓN BOTÓN ESCANEAR
+        btnEscanear.setBackground(AppColors.COLOR_MAIN_BUTTONS);
+        btnEscanear.setForeground(Color.WHITE);
+        btnEscanear.setOpaque(true);
+        btnEscanear.setBorderPainted(false);
+        btnEscanear.setFocusPainted(false);
+        if(Configuracion.esModoObscuro == true){
+            btnEscanear.setBackground(AppColors.COLOR_DARK_BACKGROUND);
+            btnEscanear.setForeground(AppColors.COLOR_DARK_BLUE);
+        }     
 
         panelBotones.add(btnCamara);
         panelBotones.add(btnArchivo);
@@ -77,6 +119,11 @@ public class WebCamNew extends JPanel {
         lblObjetoDetectado = new JLabel("Esperando imagen...", SwingConstants.CENTER);
         lblObjetoDetectado.setFont(new Font("Arial", Font.BOLD, 18));
         lblObjetoDetectado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblObjetoDetectado.setForeground(Color.white);
+        if(Configuracion.esModoObscuro == true){
+            lblObjetoDetectado.setForeground(AppColors.COLOR_DARK_BLUE);
+        }
+
 
         // Construcción de la interfaz
         panelIzquierdo.add(Box.createVerticalStrut(30));
@@ -92,6 +139,8 @@ public class WebCamNew extends JPanel {
         btnCamara.addActionListener(e -> abrirCamara());
         btnArchivo.addActionListener(e -> cargarArchivo());
         btnEscanear.addActionListener(e -> iniciarClasificacion());
+
+
     }
 
     private void abrirCamara() {
@@ -132,7 +181,10 @@ public class WebCamNew extends JPanel {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        
+            
         }).start();
+   
     }
 
     private void cargarArchivo() {
@@ -177,6 +229,8 @@ public class WebCamNew extends JPanel {
                 ex.printStackTrace();
             }
         }).start();
+        this.revalidate();
+        this.repaint(); 
     }
 
     private String convertirImagenABase64(BufferedImage imagen) throws Exception {
