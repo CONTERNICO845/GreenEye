@@ -406,7 +406,7 @@ public class Consultas {
     }
 
     // Update para Vidrio
-    public void updateGlassPoints(int pointsToAdd) {
+    public static void updateGlassPoints(int pointsToAdd) {
 
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
@@ -419,8 +419,7 @@ public class Consultas {
 
             if (rowsAffected > 0) {
 
-                int total = getGlassPoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de Vidrio. Total: " + total);
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Vidrio. Total: ");
 
             }
 
@@ -432,7 +431,7 @@ public class Consultas {
     }
 
     // Update para Plástico
-    public void updatePlasticPoints(int pointsToAdd) {
+    public static void updatePlasticPoints(int pointsToAdd) {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
             if (conn == null)
@@ -443,8 +442,7 @@ public class Consultas {
 
             if (rowsAffected > 0) {
 
-                int total = getPlasticPoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de Plástico. Total: " + total);
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Plástico. Total: ");
 
             }
 
@@ -456,7 +454,7 @@ public class Consultas {
     }
 
     // Update para Metal
-    public void updateMetalPoints(int pointsToAdd) {
+    public static void updateMetalPoints(int pointsToAdd) {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
             if (conn == null)
@@ -467,8 +465,7 @@ public class Consultas {
 
             if (rowsAffected > 0) {
 
-                int total = getMetalPoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de Metal. Total: " + total);
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de Metal. Total: ");
             }
 
         } catch (Exception e) {
@@ -479,7 +476,7 @@ public class Consultas {
     }
 
     // Update para Reciclaje Difícil
-    public void updateHardToRecyclePoints(int pointsToAdd) {
+    public static void updateHardToRecyclePoints(int pointsToAdd) {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
             if (conn == null)
@@ -491,8 +488,7 @@ public class Consultas {
 
             if (rowsAffected > 0) {
 
-                int total = getHardToRecyclePoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos... Total: " + total);
+                System.out.println("Se agregaron " + pointsToAdd + " puntos... Total: ");
             }
 
         } catch (Exception e) {
@@ -502,7 +498,7 @@ public class Consultas {
         }
     }
 
-    public void updatePaperPoints(int pointsToAdd) {
+    public static void updatePaperPoints(int pointsToAdd) {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
             if (conn == null)
@@ -514,8 +510,7 @@ public class Consultas {
 
             if (rowsAffected > 0) {
 
-                int total = getHardToRecyclePoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de papel. Total: " + total);
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de papel. Total: ");
 
             }
 
@@ -526,7 +521,7 @@ public class Consultas {
         }
     }
 
-    public void updateOrganicPoints(int pointsToAdd) {
+    public static void updateOrganicPoints(int pointsToAdd) {
         try (Connection conn = DatabaseConnection.conectar();
                 Statement stmt = conn.createStatement()) {
             if (conn == null)
@@ -538,8 +533,7 @@ public class Consultas {
 
             if (rowsAffected > 0) {
 
-                int total = getHardToRecyclePoints();
-                System.out.println("Se agregaron " + pointsToAdd + " puntos de organico. Total: " + total);
+                System.out.println("Se agregaron " + pointsToAdd + " puntos de organico. Total: ");
 
             }
 
