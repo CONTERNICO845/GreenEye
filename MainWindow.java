@@ -12,30 +12,8 @@ class MyPanel extends PanelBase {
 //Falta inicializar el server de python (Creo)
 public class MainWindow {
 
-    // Método para iniciar el puente de Python de forma invisible
-    public static void StartPythonServer() {
-    new Thread(() -> {
-        try {
-            // Asegúrate de usar la ruta correcta a tu archivo .py
-            ProcessBuilder pb = new ProcessBuilder("python", "servidor_ia.py");
-            pb.inheritIO(); // Esto hace que los "prints" de Python salgan en la consola de Java
-            Process proceso = pb.start();
-            
-            // Esto asegura que si cierras Java, el proceso de Python también se detenga
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                proceso.destroy();
-            }));
-            
-            System.out.println("--- Servidor Python iniciado desde Java ---");
-        } catch (Exception e) {
-            System.err.println("Error al iniciar el servidor Python: " + e.getMessage());
-        }
-    }).start();
-}
-
     // Main method that starts the application
     public static void main(String[] args) {
-        StartPythonServer();
 
         System.out.println("iniciando app"); // Prints a message indicating the start of the app
 

@@ -1,4 +1,3 @@
-
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
@@ -10,11 +9,6 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import java.io.ByteArrayOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Base64;
 
 public class WebCamNew extends JPanel {
@@ -111,8 +105,8 @@ public class WebCamNew extends JPanel {
 
                 //Si ya estaba encendida la reinicia
                 if (webcam.isOpen()) {
-                webcam.close();
-            }
+                    webcam.close();
+                }
                 webcam.setViewSize(WebcamResolution.VGA.getSize());
                 WebcamPanel p = new WebcamPanel(webcam);
                 p.setMirrored(true);
@@ -160,19 +154,25 @@ public class WebCamNew extends JPanel {
             return;
         }
 
-        lblObjetoDetectado.setText("Analizando residuo...");
+        lblObjetoDetectado.setText("Analizando residuo en servidor local...");
 
         new Thread(() -> {
             try {
+                // 1. Convertir imagen a Base64
                 String base64 = convertirImagenABase64(imagenActual);
-                String respuesta = enviarAlServidorPython(base64);
+                
+                // 2. Instanciar tu nueva clase conectora a Ollama
+                IA_Conector conector = new IA_Conector();
+                
+                // 3. Enviar y recibir respuesta
+                String respuesta = conector.clasificarImagen(base64);
 
                 SwingUtilities.invokeLater(() -> {
-                    lblObjetoDetectado.setText("Resultado: " + respuesta.toUpperCase());
+                    lblObjetoDetectado.setText(respuesta.toUpperCase());
                 });
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> {
-                    lblObjetoDetectado.setText("Error de conexión" + ex.getMessage());
+                    lblObjetoDetectado.setText("Error de conexión: " + ex.getMessage());
                 });
                 ex.printStackTrace();
             }
@@ -184,42 +184,5 @@ public class WebCamNew extends JPanel {
         ImageIO.write(imagen, "jpg", baos);
         byte[] bytesImagen = baos.toByteArray();
         return Base64.getEncoder().encodeToString(bytesImagen);
-    }
-
-    private String enviarAlServidorPython(String base64) throws Exception {
-        // 1. Limpieza absoluta de la cadena
-        String base64Limpio = base64.replaceAll("\\r|\\n", "");
-
-        // 2. Usar 127.0.0.1 es más confiable que 'localhost' en Windows
-        URL url = new URL("http://127.0.0.1:5005/clasificar");
-        HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
-
-        conexion.setRequestMethod("POST");
-        conexion.setRequestProperty("Content-Type", "application/json; utf-8"); // Añadimos charset
-        conexion.setRequestProperty("Accept", "application/json");
-        conexion.setDoOutput(true);
-        // Establecer tiempos de espera para que Java no se rinda mientras la GPU procesa
-        conexion.setConnectTimeout(5000);
-        conexion.setReadTimeout(30000);
-
-        String jsonInput = "{\"image\": \"" + base64Limpio + "\"}";
-
-        try (OutputStream os = conexion.getOutputStream()) {
-            byte[] input = jsonInput.getBytes("utf-8");
-            os.write(input, 0, input.length);
-        }
-
-        // 3. Leer respuesta
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(conexion.getInputStream(), "utf-8"))) {
-            StringBuilder response = new StringBuilder();
-            String responseLine;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-
-            String jsonRespuesta = response.toString();
-            // Un split más seguro por si la IA devuelve comillas
-            return jsonRespuesta.split("\"resultado\":\\s*\"")[1].split("\"")[0];
-        }
     }
 }
