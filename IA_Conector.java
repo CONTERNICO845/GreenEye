@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 public class IA_Conector {
 
     // CAMBIO 1: Usamos el endpoint de chat que es más estable para instrucciones "system"
-    private final String urlApi = "http://192.168.1.62:11434/api/chat";
+    private final String urlApi = "http://192.168.101.209:11434/api/chat";
 
     public String clasificarImagen(String base64Imagen) throws Exception {
         String base64Limpio = base64Imagen.replaceAll("\\r|\\n", "");
@@ -51,7 +51,7 @@ public class IA_Conector {
         + "\"stream\": false,"
         + "\"options\": {"
         + "  \"temperature\": 0.1,"
-        + "  \"num_predict\": 1000,"
+        + "  \"num_predict\": 2000,"
         + "  \"top_k\": 20,"
         + "  \"top_p\": 0.9"
         + "}"

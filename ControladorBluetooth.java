@@ -2,6 +2,8 @@
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class ControladorBluetooth {
@@ -47,29 +49,70 @@ public class ControladorBluetooth {
                 java.io.InputStream entrada = puerto.getInputStream();
                 byte[] buffer = new byte[1024];
 
-                System.out.println("Esperando bytes del Arduino...");
+                System.out.println("Esperando confirmación selectiva del Arduino...");
 
                 while (puerto.isOpen()) {
-
-                    int bytesLeidos = entrada.read(buffer); // 🔥 lectura directa (clave)
+                    int bytesLeidos = entrada.read(buffer);
 
                     if (bytesLeidos > 0) {
                         String mensaje = new String(buffer, 0, bytesLeidos).trim();
+                        System.out.println("RECIBIDO DESDE ARDUINO: [" + mensaje + "]");
 
-                        System.out.println("RECIBIDO RAW: [" + mensaje + "]");
-
-                        if (mensaje.contains("DETECTADO")) {
-                            System.out.println("¡CRÍTICO: Sensor activado!");
+                        // Evaluamos qué se entregó con éxito para afectar la BD correctamente
+                        if (mensaje.contains("PLASTICO")) {
+                            SwingUtilities.invokeLater(() -> {
+                                Consultas.updatePlasticPoints(3); 
+                                JOptionPane.showMessageDialog(null, "¡+3  puntos en reciclaje de Plástico!");
+                            });
+                        } 
+                        else if (mensaje.contains("CARTON")) {
+                            SwingUtilities.invokeLater(() -> {
+                                Consultas.updatePaperPoints(3); 
+                                JOptionPane.showMessageDialog(null, "¡+3 puntos en Papel y Cartón!");
+                            });
+                        } 
+                        else if (mensaje.contains("METAL")) {
+                            SwingUtilities.invokeLater(() -> {
+                                Consultas.updateMetalPoints(3);
+                                JOptionPane.showMessageDialog(null, "¡+3 puntos en Metales!");
+                            });
+                        }
+                        else if (mensaje.contains("ORGANICO")) {
+                            SwingUtilities.invokeLater(() -> {
+                                Consultas.updateOrganicPoints(3); 
+                                JOptionPane.showMessageDialog(null, "¡+3 puntos en Orgánicos!");
+                            });
+                        }
+                        else if (mensaje.contains("VIDRIO")) {
+                            SwingUtilities.invokeLater(() -> {
+                                //Consultas.updatePilasPoints(3); 
+                                JOptionPane.showMessageDialog(null, "¡+3 puntos en Orgánicos!");
+                            });
+                        }
+                        else if (mensaje.contains("DIFICIL_RECICLAJE")) {
+                            SwingUtilities.invokeLater(() -> {
+                                Consultas.updateHardToRecyclePoints(3); 
+                                JOptionPane.showMessageDialog(null, "¡+3 puntos en Orgánicos!");
+                            });
                         }
                     }
                 }
-
             } catch (Exception e) {
-                System.err.println("Error en lectura: " + e.getMessage());
+                System.err.println("Error en la escucha selectiva: " + e.getMessage());
             }
         });
 
         hilo.setDaemon(true);
         hilo.start();
+    }
+
+    public void enviarDato(String dato) {
+        if (salida != null && puerto != null && puerto.isOpen()) {
+            salida.print(dato);
+            salida.flush(); // Fuerza el envío inmediato por el puerto serial
+            System.out.println(">>> SEÑAL ENVIADA AL ARDUINO: " + dato);
+        } else {
+            System.err.println("Error: No se pudo enviar el dato. El puerto no está abierto.");
+        }
     }
 }
