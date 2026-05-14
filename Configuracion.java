@@ -178,7 +178,7 @@ public class Configuracion extends JPanel implements ActionListener {
         
         } else if (e.getSource() == btnOpcion3) {
             System.out.println("Eliminando cuenta... ¡Cuidado!");
-            Object [] opciones = {"No, no quiero eliminarlo", "Si, si quiero elimimarlo"};
+            Object [] opciones = {"No, no quiero eliminarlo", "Si, si quiero eliminarlo"};
             int respuesta = JOptionPane.showOptionDialog(this,"Esta apunto de elinar su cuenta. \n¿Esta Seguro?",
             "Ultima Advertencia", JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null, opciones, opciones [0]);    
             if (respuesta == 1) { 
