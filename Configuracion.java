@@ -50,13 +50,13 @@ public class Configuracion extends JPanel implements ActionListener {
     if (esModoObscuro){
         this.setBackground(Color.BLACK);
 
-        btnOpcion1.setBackground(AppColors.COLOR_GREEN_CLARO);
+        btnOpcion1.setBackground(AppColors.COLOR_DARK_BUTTONS);
         btnOpcion2.setBackground(AppColors.COLOR_WHITE);
         btnOpcion3.setBackground(AppColors.COLOR_ROJO_CLARO); 
 
-        btnOpcion1.setForeground(Color.BLACK);
+        btnOpcion1.setForeground(AppColors.COLOR_DARK_BLUE);
         btnOpcion2.setForeground(Color.BLACK);
-        btnOpcion3.setForeground(Color.BLACK);
+        btnOpcion3.setForeground(AppColors.COLOR_DARK_BLUE);
 
     }else{
         this.setBackground(Color.WHITE);
