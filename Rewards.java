@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.time.LocalDate;
+import javax.swing.*;
 
 public class Rewards extends JPanel implements ActionListener {
 

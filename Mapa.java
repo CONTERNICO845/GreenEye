@@ -118,11 +118,11 @@ public class Mapa extends JPanel {
         JPanel panelDialogo = new JPanel();
         panelDialogo.setLayout(new BoxLayout(panelDialogo, BoxLayout.Y_AXIS));
 
-        JLabel labelDesc = new JLabel("El PIN " + numeroBoton + " pertenece a los botes de la Categoría " + categoria + ".");
+        /*JLabel labelDesc = new JLabel("El PIN " + numeroBoton + " pertenece a los botes de la Categoría " + categoria + ".");
         labelDesc.setFont(new Font("SansSerif", Font.ITALIC, 12));
         labelDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
         panelDialogo.add(labelDesc);
-        
+        */
         panelDialogo.add(Box.createRigidArea(new Dimension(0, 10))); 
 
         JLabel titulo = new JLabel("Botes de basura disponibles:");
