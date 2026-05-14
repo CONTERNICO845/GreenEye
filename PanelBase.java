@@ -6,6 +6,8 @@ import javax.swing.*;
 //Clase abstracta que solo puede crear hijos que seran las ventanas separadas
 abstract class PanelBase extends JPanel {
 
+    protected ControladorBluetooth controladorBT;
+
     //Constantes para la ventana
     public final int SCREEN_WIDTH = 1920;
     public final int SCREEN_HEIGHT = 1080;
@@ -32,6 +34,9 @@ abstract class PanelBase extends JPanel {
     protected JButton perfilButton; //Boton superior derecha del perfil
 
     public PanelBase(String titleText) {
+        controladorBT = new ControladorBluetooth();
+        controladorBT.conectar("COM8");
+
         this.setLayout(new BorderLayout());
         this.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -172,7 +177,7 @@ abstract class PanelBase extends JPanel {
         JPanel newScreen = null;
 
         newScreen = switch (screenName) {
-            case "Inicio" -> new WebCamNew();
+            case "Inicio" -> new WebCamNew(controladorBT);
             case "Estadisticas" -> new Statistics();
             case "Rewards" -> new Rewards();
             case "Mapa" -> new Mapa();

@@ -72,4 +72,14 @@ public class ControladorBluetooth {
         hilo.setDaemon(true);
         hilo.start();
     }
+
+    public void enviarDato(String dato) {
+        if (salida != null && puerto != null && puerto.isOpen()) {
+            salida.print(dato);
+            salida.flush(); // Fuerza el envío inmediato por el puerto serial
+            System.out.println(">>> SEÑAL ENVIADA AL ARDUINO: " + dato);
+        } else {
+            System.err.println("Error: No se pudo enviar el dato. El puerto no está abierto.");
+        }
+    }
 }

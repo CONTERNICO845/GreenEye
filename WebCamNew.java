@@ -1,3 +1,4 @@
+
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
@@ -17,11 +18,14 @@ public class WebCamNew extends JPanel {
     private JPanel panelFoto;
     private JLabel lblObjetoDetectado;
 
+    private ControladorBluetooth bluetooth;
+
     private final int TAMANO_CIRCULO = 500;
     private final int MARGEN_INTERNO = 15;
     private final Color COLOR_VERDE = new Color(34, 139, 34);
 
-    public WebCamNew() {
+    public WebCamNew(ControladorBluetooth bluetooth) {
+        this.bluetooth = bluetooth;
         // Configuración básica del panel
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -160,15 +164,26 @@ public class WebCamNew extends JPanel {
             try {
                 // 1. Convertir imagen a Base64
                 String base64 = convertirImagenABase64(imagenActual);
-                
+
                 // 2. Instanciar tu nueva clase conectora a Ollama
                 IA_Conector conector = new IA_Conector();
-                
+
                 // 3. Enviar y recibir respuesta
                 String respuesta = conector.clasificarImagen(base64);
 
                 SwingUtilities.invokeLater(() -> {
                     lblObjetoDetectado.setText(respuesta.toUpperCase());
+
+                    if (this.bluetooth != null) {
+                        // Verificamos si la respuesta del JSON contiene alguna categoría de basura
+                        if (respuesta.contains("PLASTICO") || respuesta.contains("PAPEL")
+                                || respuesta.contains("CARTON") || respuesta.contains("METAL")
+                                || respuesta.contains("ORGANICO") || respuesta.contains("VIDRIO")
+                                || respuesta.contains("DIFICIL RECICLAJE") || respuesta.contains("PILAS")){
+                            // Enviamos el dato al Arduino (Modifica la "A" por el caracter que espera tu código de Arduino)
+                            bluetooth.enviarDato("A");
+                        }
+                    }
                 });
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> {
