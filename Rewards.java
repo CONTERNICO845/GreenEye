@@ -20,13 +20,12 @@ public class Rewards extends JPanel implements ActionListener {
     private JPanel panelTicket;
     private JLabel lblCodigo, lblFecha, lblCaducidad, lblRecompensa;
 
-    private Consultas consultas; // CAMBIO: instancia de Consultas
+    private Consultas consultas;
 
     public Rewards() {
-        consultas = new Consultas();   // CAMBIO: inicializar objeto
-        puntos = consultas.getPoints(); // CAMBIO: obtener puntos desde DB
+        consultas = new Consultas();
+        puntos = consultas.getPoints();
         nivel = consultas.getNivel();
-
 
         setLayout(new BorderLayout());
 
@@ -35,13 +34,14 @@ public class Rewards extends JPanel implements ActionListener {
 
         panelCuadros = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-        btnRojo = crearBoton("Canjear 50 puntos. AFresca (mdn)", Color.RED, "imagenes/botorewards/Aguafresca.png"); 
+        // Usa rutas con "/" inicial porque están en ClasificadorJava/Imagenes
+        btnRojo = crearBoton("Canjear 50 puntos. AFresca (mdn)", Color.RED, "/Imagenes/botorewards/Aguafresca.png"); 
         btnRojo.setPreferredSize(new Dimension(300, 300));
 
-        btnAmarillo = crearBoton("Canjear 100 puntos. HotDog (mdn)", Color.YELLOW, "imagenes/botorewards/Hotdog.jpg");
+        btnAmarillo = crearBoton("Canjear 100 puntos. HotDog (mdn)", Color.YELLOW, "/Imagenes/botorewards/Hotdog.jpg");
         btnAmarillo.setPreferredSize(new Dimension(300, 300));
 
-        btnVerde = crearBoton("Canjear 200 puntos. Combo Big", Color.GREEN, "imagenes/botorewards/Combo.png");
+        btnVerde = crearBoton("Canjear 200 puntos. Combo Big", Color.GREEN, "/Imagenes/botorewards/Combo.png");
         btnVerde.setPreferredSize(new Dimension(300, 300));
 
         panelCuadros.add(btnRojo);
@@ -66,17 +66,22 @@ public class Rewards extends JPanel implements ActionListener {
         add(panelTicket, BorderLayout.WEST);
 
         setSize(700, 400);
-        DarkMode(); // mantener tu método de colores
+        DarkMode();
     }
 
     private JButton crearBoton(String texto, Color color, String rutaImagen) {
         JButton boton = new JButton(texto);
         if (rutaImagen != null) {
-            ImageIcon icono = new ImageIcon(rutaImagen);
-            Image img = icono.getImage().getScaledInstance(TAMANO_IMAGEN, TAMANO_IMAGEN, Image.SCALE_SMOOTH);
-            boton.setIcon(new ImageIcon(img));
-            boton.setHorizontalTextPosition(SwingConstants.CENTER);
-            boton.setVerticalTextPosition(SwingConstants.BOTTOM);
+            java.net.URL url = getClass().getResource(rutaImagen);
+            if (url != null) {
+                ImageIcon icono = new ImageIcon(url);
+                Image img = icono.getImage().getScaledInstance(TAMANO_IMAGEN, TAMANO_IMAGEN, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(img));
+                boton.setHorizontalTextPosition(SwingConstants.CENTER);
+                boton.setVerticalTextPosition(SwingConstants.BOTTOM);
+            } else {
+                System.out.println("No se encontró la imagen: " + rutaImagen);
+            }
         }
         boton.setBackground(color);
         boton.setOpaque(true);
@@ -86,13 +91,13 @@ public class Rewards extends JPanel implements ActionListener {
     }
 
     private void verificarNivel() {
-    if (puntos >= nivel * 100) {
-        nivel++;
-        consultas.setNivel(nivel); // <-- guardar en DB
-        JOptionPane.showMessageDialog(this,
-            "¡Felicidades! Has alcanzado el nivel " + nivel);
+        if (puntos >= nivel * 100) {
+            nivel++;
+            consultas.setNivel(nivel);
+            JOptionPane.showMessageDialog(this,
+                "¡Felicidades! Has alcanzado el nivel " + nivel);
+        }
     }
-}
 
     private void actualizarEstado() {
         labelEstado.setText("Puntos: " + puntos + " | Nivel: " + nivel);
@@ -115,8 +120,8 @@ public class Rewards extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnRojo) {
             if (puntos >= PUNTOS_CANJEAR) {
-                consultas.updatePoints(-PUNTOS_CANJEAR); // CAMBIO: actualizar en DB
-                puntos = consultas.getPoints();          // CAMBIO: refrescar
+                consultas.updatePoints(-PUNTOS_CANJEAR);
+                puntos = consultas.getPoints();
                 JOptionPane.showMessageDialog(this, "Canjeaste un agua fresca mediana");
                 generarTicket("Agua fresca mediana");
             } else {
@@ -124,8 +129,8 @@ public class Rewards extends JPanel implements ActionListener {
             }
         } else if (e.getSource() == btnAmarillo) {
             if (puntos >= PUNTOS_CANJEARAM) {
-                consultas.updatePoints(-PUNTOS_CANJEARAM); // CAMBIO
-                puntos = consultas.getPoints();            // CAMBIO
+                consultas.updatePoints(-PUNTOS_CANJEARAM);
+                puntos = consultas.getPoints();
                 JOptionPane.showMessageDialog(this, "Canjeaste un hot dog mediano");
                 generarTicket("Hot dog mediano");
             } else {
@@ -133,8 +138,8 @@ public class Rewards extends JPanel implements ActionListener {
             }
         } else if (e.getSource() == btnVerde) {
             if (puntos >= PUNTOS_CANJEARVERD) {
-                consultas.updatePoints(-PUNTOS_CANJEARVERD); // CAMBIO
-                puntos = consultas.getPoints();              // CAMBIO
+                consultas.updatePoints(-PUNTOS_CANJEARVERD);
+                puntos = consultas.getPoints();
                 JOptionPane.showMessageDialog(this, "Canjeaste un combo big de Agua fresca y Hotdog");
                 generarTicket("Combo big Agua fresca + Hotdog");
             } else {
@@ -184,4 +189,4 @@ public class Rewards extends JPanel implements ActionListener {
         frame.setVisible(true);
         rewardsPanel.DarkMode();
     }
-}// Código hecho por 100% inteligencia humana
+}
