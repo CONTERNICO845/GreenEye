@@ -165,46 +165,20 @@ public class WebCamNew extends JPanel {
                 // 1. Convertir imagen a Base64
                 String base64 = convertirImagenABase64(imagenActual);
 
-                // 2. Instanciar tu nueva clase conectora a Ollama
+                // 2. Obtener respuesta del conector
                 IA_Conector conector = new IA_Conector();
-
-                // 3. Enviar y recibir respuesta
                 String respuesta = conector.clasificarImagen(base64);
 
+                // --- PASO 1: MOSTRAR RESPUESTA INMEDIATAMENTE ---
                 SwingUtilities.invokeLater(() -> {
                     lblObjetoDetectado.setText(respuesta.toUpperCase());
-
-                    if (this.bluetooth != null) {
-                        // Convertimos la respuesta a mayúsculas para evitar errores de comparación
-                        String resUpper = respuesta.toUpperCase();
-                        String letraAEnviar = "";
-
-                        // Determinamos qué letra enviar según la categoría encontrada en el JSON
-                        if (resUpper.contains("PLASTICO")) {
-                            letraAEnviar = "P"; // P de Plástico
-                        } else if (resUpper.contains("PAPEL") || resUpper.contains("CARTON")) {
-                            letraAEnviar = "C"; // C de Cartón/Papel
-                        } else if (resUpper.contains("METAL")) {
-                            letraAEnviar = "M"; // M de Metal
-                        } else if (resUpper.contains("ORGANICO")) {
-                            letraAEnviar = "O"; // O de Orgánico
-                        } else if (resUpper.contains("VIDRIO")) {
-                            letraAEnviar = "V"; // V de Vidrio
-                        } else if (resUpper.contains("PILAS")) {
-                            letraAEnviar = "B"; // B de Baterías
-                        } else if (resUpper.contains("DIFICIL RECICLAJE")) {
-                            letraAEnviar = "R"; // R de Reciclaje o Resto
-                        }
-
-                        // Si encontramos una categoría válida, enviamos la letra correspondiente
-                        if (!letraAEnviar.isEmpty()) {
-                            bluetooth.enviarDato(letraAEnviar);
-                            System.out.println(">>> SEÑAL ENVIADA AL ARDUINO: " + letraAEnviar);
-                        } else {
-                            System.out.println(">>> OBJETO DETECTADO NO ES BASURA O NO ESTÁ CATEGORIZADO");
-                        }
-                    }
                 });
+
+                // --- PASO 2: PROCESAR BLUETOOTH (Después de mostrar el texto) ---
+                if (this.bluetooth != null) {
+                    procesarEnvioBluetooth(respuesta);
+                }
+
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> {
                     lblObjetoDetectado.setText("Error de conexión: " + ex.getMessage());
@@ -212,6 +186,35 @@ public class WebCamNew extends JPanel {
                 ex.printStackTrace();
             }
         }).start();
+    }
+
+    // Método auxiliar para no saturar el hilo principal
+    private void procesarEnvioBluetooth(String respuesta) {
+        String resUpper = respuesta.toUpperCase();
+        String letraAEnviar = "";
+
+        if (resUpper.contains("PLASTICO")) {
+            letraAEnviar = "P";
+        } else if (resUpper.contains("PAPEL") || resUpper.contains("CARTON")) {
+            letraAEnviar = "C";
+        } else if (resUpper.contains("METAL")) {
+            letraAEnviar = "M";
+        } else if (resUpper.contains("ORGANICO")) {
+            letraAEnviar = "O";
+        } else if (resUpper.contains("VIDRIO")) {
+            letraAEnviar = "V";
+        } else if (resUpper.contains("PILAS")) {
+            letraAEnviar = "B";
+        } else if (resUpper.contains("DIFICIL RECICLAJE")) {
+            letraAEnviar = "R";
+        }
+
+        if (!letraAEnviar.isEmpty()) {
+            bluetooth.enviarDato(letraAEnviar);
+            System.out.println(">>> SEÑAL ENVIADA AL ARDUINO: " + letraAEnviar);
+        } else {
+            System.out.println(">>> OBJETO DETECTADO NO ES BASURA O NO ESTÁ CATEGORIZADO");
+        }
     }
 
     private String convertirImagenABase64(BufferedImage imagen) throws Exception {
